@@ -1,0 +1,11 @@
+ANCHURA_PANTALLA, ALTURA_PANTALLA = 800, 600
+
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+VENTANA = (80, 180, 255)
+CIELO = (120, 222, 255) 
+MARCOLOR = (32,112,225)
+
+# Definir el mar como un polígono
+MAR = [(800, 600), (0, 600), (0, 178), (800, 178)]

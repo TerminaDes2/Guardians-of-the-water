@@ -1,123 +1,130 @@
 import pygame
 import sys
-import random
+import constantes
+from barco import cargar_barco
+from objetos import generar_circulos, generar_cuadrados
+from funciones import draw_triangle, check_collision
 
+# Inicializar Pygame
 pygame.init()
 
-screen_width, screen_height = 800, 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Guardians of the water")
+screen = pygame.display.set_mode((constantes.ANCHURA_PANTALLA, constantes.ALTURA_PANTALLA))
+pygame.display.set_caption("Guardians of the Water")
 
-black = (0, 0, 0)
-white = (255, 255, 255)
-RED = (255, 0, 0)
-Ventana = (80, 180, 255)
-Cielo = (120, 222, 255) 
-Mar = (32,112,225)
+# Cargar el barco
+barco, barco_rect = cargar_barco()
 
-mar = [(800, 600), (0, 600), (0, 178), (800, 178)]
-
-barco = pygame.image.load("barco.png")
-
-barco = pygame.transform.scale(barco, (barco.get_width() * 4, barco.get_height() * 4))
-
-barco_rect = barco.get_rect()
-barco_rect.center = (screen_width // 2, 172)
-
-speed = 5
-movement_allowed = True
+# Variables del barco y triángulo
+velocidad = 5
+movimiento_permitido = True
 stop_time = 0
 flip_horizontal = False
+triangle_color = (0, 255, 0)
+triangle_pos = [constantes.ANCHURA_PANTALLA // 2, 100]
+triangle_size = 20
+triangle_velocidad = (constantes.ALTURA_PANTALLA - 100) / 3
+triangle_active = False
+triangle_direction = 1
+triangle_timer = 0
+collision_detected = False
 
+# Generar círculos y cuadrados
+circles = generar_circulos(10, 10)
+squares = generar_cuadrados(10, 15)
+
+# Bucle principal
 clock = pygame.time.Clock()
-
-circles = []
-num_circles = 10
-circle_radius = 10
-squares = []
-num_squares = 10
-square_size = 15
-
-for i in range(num_circles):
-    circle_x = random.uniform(circle_radius, screen_width - circle_radius)
-    circle_y = random.uniform(screen_height // 3, screen_height - circle_radius)
-    if circle_y >= 100:
-        circle_speed = random.uniform(0,2)  
-    if circle_y >= 300:
-        circle_speed = random.uniform(3,5)
-    if circle_y >= 450: 
-        circle_speed = random.uniform(6,8)   
-    circles.append([circle_x, circle_y, circle_speed])
-
-for i in range(num_squares):
-    square_x = random.uniform(0, screen_width - square_size)
-    square_y = random.uniform(screen_height // 3, screen_height - square_size)
-    if square_y >= 100:
-        square_speed = random.uniform(0,2)  
-    if square_y >= 300:
-        square_speed = random.uniform(3,5)
-    if square_y >= 450: 
-        square_speed = random.uniform(6,8)   
-    squares.append([square_x, square_y, square_speed])
-
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    if not movement_allowed:
-        if pygame.time.get_ticks() - stop_time >= 4000:
-            movement_allowed = True
-            speed = 5
-
+    # Obtener las teclas presionadas
     keys = pygame.key.get_pressed()
 
+    # Mover el barco y ajustar la dirección
     if keys[pygame.K_a] or keys[pygame.K_LEFT] and barco_rect.left > -84:
-        barco_rect.x -= speed
+        barco_rect.x -= velocidad
         flip_horizontal = False
-    if keys[pygame.K_d] or keys[pygame.K_RIGHT] and barco_rect.right < screen_width + 84:
-        barco_rect.x += speed
+    if keys[pygame.K_d] or keys[pygame.K_RIGHT] and barco_rect.right < constantes.ANCHURA_PANTALLA + 84:
+        barco_rect.x += velocidad
         flip_horizontal = True
-    if keys[pygame.K_SPACE]:
-        movement_allowed = False
-        speed = 0
+
+    # Activar el triángulo cuando se presiona la barra espaciadora
+    if keys[pygame.K_SPACE] and not triangle_active:
+        movimiento_permitido = False
+        velocidad = 0
         stop_time = pygame.time.get_ticks()
+        triangle_active = True
+        triangle_direction = 1  # El triángulo comienza a bajar
+        triangle_timer = pygame.time.get_ticks()
+        triangle_pos[1] = 100  # Posición inicial del triángulo
+        collision_detected = False
 
-    screen.fill(Cielo)
+    # Mover el triángulo si está activo
+    if triangle_active:
+        time_passed = (pygame.time.get_ticks() - triangle_timer) / 1000  # Tiempo en segundos
+        if not collision_detected:
+            if triangle_direction == 1:  # Bajando
+                triangle_pos[1] += triangle_velocidad * clock.get_time() / 1000
+                if triangle_pos[1] >= constantes.ALTURA_PANTALLA - triangle_size:
+                    triangle_direction = -1  # Comienza a subir
+                    triangle_timer = pygame.time.get_ticks()
+            elif triangle_direction == -1:  # Subiendo
+                triangle_pos[1] -= triangle_velocidad * clock.get_time() / 1000
+                if triangle_pos[1] <= 100:
+                    triangle_active = False  # Termina el ciclo
+                    triangle_pos[1] = 100
 
+        # Verificar colisión con círculos o cuadrados
+        for circle in circles:
+            if check_collision(triangle_pos, triangle_size, (circle[0], circle[1]), 10 * 2):
+                collision_detected = True
+                triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
+
+        for square in squares:
+            if check_collision(triangle_pos, triangle_size, (square[0], square[1]), 15):
+                collision_detected = True
+                triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
+
+    # Dibujar el fondo
+    screen.fill(constantes.CIELO)
+
+    # Dibujar el barco, con o sin flip según corresponda
     if flip_horizontal:
         barco_flipped = pygame.transform.flip(barco, True, False)
         screen.blit(barco_flipped, barco_rect)
     else:
         screen.blit(barco, barco_rect)
-    
-    pygame.draw.polygon(screen, Mar, mar)
-    
+
+    # Dibujar el mar
+    pygame.draw.polygon(screen, constantes.MARCOLOR, constantes.MAR)
+
+    # Mover y dibujar los círculos
     for circle in circles:
-        circle[0] += circle[2]  
-        if circle[0] - circle_radius > screen_width or circle[0] + circle_radius < 0:
-            circle[2] *= -1  
+        circle[0] += circle[2]
+        if circle[0] - 10 > constantes.ANCHURA_PANTALLA or circle[0] + 10 < 0:
+            circle[2] *= -1
+        pygame.draw.circle(screen, constantes.RED, (int(circle[0]), int(circle[1])), 10)
 
-        pygame.draw.circle(screen, RED, (int(circle[0]), int(circle[1])), circle_radius)
-
+    # Mover y dibujar los cuadrados
     for square in squares:
-        square[0] += square[2]  
-        if square[0] + square_size > screen_width or square[0] < 0:
-            square[2] *= -1  
+        square[0] += square[2]
+        if square[0] + 15 > constantes.ANCHURA_PANTALLA or square[0] < 0:
+            square[2] *= -1
+        pygame.draw.rect(screen, constantes.BLACK, (square[0], square[1], 15, 15))
 
-        pygame.draw.rect(screen, black, (square[0], square[1], square_size, square_size))
+    # Dibujar el triángulo si está activo
+    if triangle_active:
+        draw_triangle(screen, triangle_color, triangle_pos, triangle_size)
 
-    pygame.draw.circle(screen, white, (70-20, 60), 20)
-    pygame.draw.circle(screen, white, (70+22, 60), 20)
-    pygame.draw.circle(screen, white, (70, 60), 20)
-    pygame.draw.circle(screen, white, (300-20, 60+10), 20)
-    pygame.draw.circle(screen, white, (300+22, 60), 20)
-    pygame.draw.circle(screen, white, (300-40, 60), 20)
-    pygame.draw.circle(screen, white, (300, 60), 20)
+    # Actualizar la pantalla
     pygame.display.flip()
 
-    pygame.time.Clock().tick(120)
+    # Limitar la tasa de frames a 60
+    clock.tick(60)
 
+# Cerrar Pygame
 pygame.quit()
 sys.exit()
