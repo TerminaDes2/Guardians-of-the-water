@@ -65,7 +65,8 @@ while running:
     # Mover el triángulo si está activo
     if triangle_active:
         time_passed = (pygame.time.get_ticks() - triangle_timer) / 1000  # Tiempo en segundos
-        if not collision_detected:
+
+        if not collision_detected:  # Movimiento normal sin colisión
             if triangle_direction == 1:  # Bajando
                 triangle_pos[1] += triangle_velocidad * clock.get_time() / 1000
                 if triangle_pos[1] >= constantes.ALTURA_PANTALLA - triangle_size:
@@ -76,6 +77,13 @@ while running:
                 if triangle_pos[1] <= 100:
                     triangle_active = False  # Termina el ciclo
                     triangle_pos[1] = 100
+
+        if collision_detected:  # Si se detecta una colisión
+            triangle_direction = -1  # Asegúrate de que siempre suba tras colisión
+            triangle_pos[1] -= triangle_velocidad * clock.get_time() / 1000  # Subir
+            if triangle_pos[1] <= 100:  # Si ya ha subido completamente
+                triangle_active = False  # Detener el triángulo
+                collision_detected = False  # Resetear la colisión para futuros movimientos
 
         # Verificar colisión con círculos o cuadrados
         for circle in circles:
