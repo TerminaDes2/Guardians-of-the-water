@@ -5,6 +5,7 @@ from barco import cargar_barco
 from objetos import generar_circulos, generar_cuadrados
 from funciones import draw_triangle, check_collision
 
+
 # Inicializar Pygame
 pygame.init()
 
@@ -53,9 +54,7 @@ while running:
 
     # Activar el triángulo cuando se presiona la barra espaciadora
     if keys[pygame.K_SPACE] and not triangle_active:
-        movimiento_permitido = False
-        velocidad = 0
-        stop_time = pygame.time.get_ticks()
+        
         triangle_active = True
         triangle_direction = 1  # El triángulo comienza a bajar
         triangle_timer = pygame.time.get_ticks()
@@ -68,6 +67,8 @@ while running:
 
         if not collision_detected:  # Movimiento normal sin colisión
             if triangle_direction == 1:  # Bajando
+                movimiento_permitido = False
+                velocidad = 0
                 triangle_pos[1] += triangle_velocidad * clock.get_time() / 1000
                 if triangle_pos[1] >= constantes.ALTURA_PANTALLA - triangle_size:
                     triangle_direction = -1  # Comienza a subir
@@ -75,17 +76,20 @@ while running:
             elif triangle_direction == -1:  # Subiendo
                 triangle_pos[1] -= triangle_velocidad * clock.get_time() / 1000
                 if triangle_pos[1] <= 100:
+                    movimiento_permitido = True
+                    velocidad = 5
                     triangle_active = False  # Termina el ciclo
                     triangle_pos[1] = 100
-
         if collision_detected:  # Si se detecta una colisión
-            triangle_direction = -1  # Asegúrate de que siempre suba tras colisión
+            triangle_direction = -1  # Asegúra de que siempre suba tras colisión
             triangle_pos[1] -= triangle_velocidad * clock.get_time() / 1000  # Subir
             if triangle_pos[1] <= 100:  # Si ya ha subido completamente
+                movimiento_permitido = True
+                velocidad = 5
                 triangle_active = False  # Detener el triángulo
                 collision_detected = False  # Resetear la colisión para futuros movimientos
 
-        # Verificar colisión con círculos o cuadrados
+        # Verifica la colisión con círculos o cuadrados
         for circle in circles:
             if check_collision(triangle_pos, triangle_size, (circle[0], circle[1]), 10 * 2):
                 collision_detected = True
@@ -96,17 +100,17 @@ while running:
                 collision_detected = True
                 triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
 
-    # Dibujar el fondo
+    # Dibuja el fondo
     screen.fill(constantes.CIELO)
 
-    # Dibujar el barco, con o sin flip según corresponda
+    # Dibuja el barco, con o sin flip según corresponda
     if flip_horizontal:
         barco_flipped = pygame.transform.flip(barco, True, False)
         screen.blit(barco_flipped, barco_rect)
     else:
         screen.blit(barco, barco_rect)
 
-    # Dibujar el mar
+    # Dibuja el mar
     pygame.draw.polygon(screen, constantes.MARCOLOR, constantes.MAR)
 
     # Mover y dibujar los círculos
