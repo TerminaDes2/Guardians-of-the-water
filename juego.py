@@ -29,9 +29,16 @@ triangle_timer = 0
 collision_detected = False
 colisiones_activas = True
 
+# Variables del contador
+start_ticks = pygame.time.get_ticks()  # Tiempo inicial
+cuadrados_agarrados = 0  # Contador de cuadrados agarrados
+circulos_agarrados = 0  # Contador de circulos agarrados
+tiempo_limite = 300  # 5 minutos en segundos
+
 # Generar círculos y cuadrados
 circles = generar_circulos(10, 10)
 squares = generar_cuadrados(10, 15)
+circulos_eliminables = len(circles)
 
 # Función para verificar colisiones
 def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
@@ -52,6 +59,27 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    # Verificar si el tiempo se agotó
+    segundos_transcurridos = (pygame.time.get_ticks() - start_ticks) / 1000
+    tiempo_restante = tiempo_limite - segundos_transcurridos
+    if tiempo_restante <= 0 or cuadrados_agarrados >= 5:
+        # Mostrar mensaje de "Perdiste"
+        font = pygame.font.Font(None, 74)
+        texto_perdiste = font.render("Perdiste", True, (255, 0, 0))
+        screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 100, constantes.ALTURA_PANTALLA // 2 - 50))
+        pygame.display.flip()
+        pygame.time.wait(3000)
+        running = False
+        continue
+
+    if circulos_agarrados == circulos_eliminables:
+        font = pygame.font.Font(None, 74)
+        texto_perdiste = font.render("Ganaste", True, (255, 215, 0))
+        screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 100, constantes.ALTURA_PANTALLA // 2 - 50))
+        pygame.display.flip()
+        pygame.time.wait(3000)
+        running = False
 
     # Obtener las teclas presionadas
     keys = pygame.key.get_pressed()
@@ -113,13 +141,15 @@ while running:
                 if check_collision(triangle_pos, triangle_size, (circle[0], circle[1]), 10 * 2):
                     collision_detected = True
                     triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
-                    circles.remove(circle)
+                    circles.remove(circle) #Elimina el circulo golpeado
+                    circulos_agarrados += 1  # Aumentar contador de circulos agarrados
                     colisiones_activas = False  # Desactivar colisiones
             for square in squares:
                 if check_collision(triangle_pos, triangle_size, (square[0], square[1]), 15):
                     collision_detected = True
                     triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
-                    squares.remove(square)
+                    squares.remove(square) #Elimina el cuadrado golpeado
+                    cuadrados_agarrados += 1  # Aumentar contador de cuadrados agarrados
                     colisiones_activas = False  # Desactivar colisiones
 
 
@@ -179,6 +209,17 @@ while running:
     # Dibuja el colisionador en la pantalla
     screen.blit(collision_surface, (collision_x, collision_y))
 
+    # Mostrar el tiempo restante
+    font = pygame.font.Font(None, 36)
+    tiempo_texto = font.render(f"Tiempo: {tiempo_restante / 60:.2f} min", True, (0, 0, 0))
+    screen.blit(tiempo_texto, (10, 10))
+
+    # Mostrar la cantidad de cuadrados agarrados
+    cuadrados_texto = font.render(f"Cuadrados: {cuadrados_agarrados}", True, (0, 0, 0))
+    screen.blit(cuadrados_texto, (10, 40))
+
+    cuadrados_texto = font.render(f"Circulos: {circulos_agarrados}", True, (0, 0, 0))
+    screen.blit(cuadrados_texto, (10, 70))
 
     # Actualizar la pantalla
     pygame.display.flip()
