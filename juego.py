@@ -13,6 +13,11 @@ pygame.display.set_caption("Guardians of the Water")
 # Cargar el barco
 barco, barco_rect = cargar_barco()
 
+#dibujo barra de vida
+alt_x = 14
+alt_y = 84
+divisible = 84 - 14
+
 # Variables del barco y triángulo
 velocidad = 5
 movimiento_permitido = True
@@ -29,6 +34,9 @@ triangle_timer = 0
 collision_detected = False
 colisiones_activas = True
 
+#Cantidad de animales que puedes agarrar para perder
+pierdes = 8
+
 # Variables del contador
 start_ticks = pygame.time.get_ticks()  # Tiempo inicial
 cuadrados_agarrados = 0  # Contador de cuadrados agarrados
@@ -38,6 +46,8 @@ tiempo_limite = 300  # 5 minutos en segundos
 # Generar círculos y cuadrados
 circles = generar_circulos(10, 10)
 squares = generar_cuadrados(10, 15)
+
+#copia la cantidad de elementos en la lista circles
 circulos_eliminables = len(circles)
 
 # Función para verificar colisiones
@@ -63,7 +73,7 @@ while running:
     # Verificar si el tiempo se agotó
     segundos_transcurridos = (pygame.time.get_ticks() - start_ticks) / 1000
     tiempo_restante = tiempo_limite - segundos_transcurridos
-    if tiempo_restante <= 0 or cuadrados_agarrados >= 5:
+    if tiempo_restante <= 0 or cuadrados_agarrados >= pierdes :
         # Mostrar mensaje de "Perdiste"
         font = pygame.font.Font(None, 74)
         texto_perdiste = font.render("Perdiste", True, (255, 0, 0))
@@ -85,7 +95,7 @@ while running:
     keys = pygame.key.get_pressed()
 
     # Mover el barco y ajustar la dirección
-    if keys[pygame.K_a] and triangle_movement == False and barco_rect.left > -84 or keys[pygame.K_LEFT] and triangle_movement == False and triangle_movement and barco_rect.left > -84:
+    if keys[pygame.K_a] and triangle_movement == False and barco_rect.left > -84 or keys[pygame.K_LEFT] and triangle_movement == False and barco_rect.left > -84:
         barco_rect.x -= velocidad
         flip_horizontal = False
     if keys[pygame.K_d] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 84 or keys[pygame.K_RIGHT] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 84:
@@ -93,7 +103,7 @@ while running:
         flip_horizontal = True
 
     # Activar el triángulo cuando se presiona la barra espaciadora
-    if keys[pygame.K_SPACE] and not triangle_movement:
+    if keys[pygame.K_SPACE] and triangle_movement == False or keys[pygame.K_DOWN] and triangle_movement == False:
         triangle_movement = True
         triangle_direction = 1  # El triángulo comienza a bajar
         triangle_timer = pygame.time.get_ticks()
@@ -151,7 +161,8 @@ while running:
                     squares.remove(square) #Elimina el cuadrado golpeado
                     cuadrados_agarrados += 1  # Aumentar contador de cuadrados agarrados
                     colisiones_activas = False  # Desactivar colisiones
-
+                    alt_x += divisible / (pierdes - 1)
+                    alt_y -= divisible / (pierdes - 1)
 
     # Dibuja el fondo
     screen.fill(constantes.CIELO)
@@ -212,14 +223,20 @@ while running:
     # Mostrar el tiempo restante
     font = pygame.font.Font(None, 36)
     tiempo_texto = font.render(f"Tiempo: {tiempo_restante / 60:.2f} min", True, (0, 0, 0))
-    screen.blit(tiempo_texto, (10, 10))
+    screen.blit(tiempo_texto, (590, 10))
 
     # Mostrar la cantidad de cuadrados agarrados
     cuadrados_texto = font.render(f"Cuadrados: {cuadrados_agarrados}", True, (0, 0, 0))
-    screen.blit(cuadrados_texto, (10, 40))
+    screen.blit(cuadrados_texto, (590, 40))
 
     cuadrados_texto = font.render(f"Circulos: {circulos_agarrados}", True, (0, 0, 0))
-    screen.blit(cuadrados_texto, (10, 70))
+    screen.blit(cuadrados_texto, (590, 70))
+
+    pygame.draw.rect(screen, constantes.BLACK, (10, 10, 20, 90), border_radius=20)
+    if cuadrados_agarrados == pierdes:
+        not pygame.draw.rect(screen, constantes.RED, (0, 0, 0, 0), border_radius=20)
+    if cuadrados_agarrados < pierdes:
+        pygame.draw.rect(screen, constantes.RED, (12, alt_x, 15, alt_y), border_radius=20)
 
     # Actualizar la pantalla
     pygame.display.flip()
