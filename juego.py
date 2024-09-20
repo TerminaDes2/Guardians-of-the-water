@@ -3,8 +3,6 @@ import sys
 import constantes
 from barco import cargar_barco
 from objetos import generar_circulos, generar_cuadrados
-from funciones import draw_triangle, check_collision
-
 
 # Inicializar Pygame
 pygame.init()
@@ -23,15 +21,29 @@ flip_horizontal = False
 triangle_color = (0, 255, 0)
 triangle_pos = [constantes.ANCHURA_PANTALLA // 2, 100]
 triangle_size = 20
-triangle_velocidad = (constantes.ALTURA_PANTALLA - 100) / 3
-triangle_active = False
+triangle_velocidad = 300
+triangle_active = True
+triangle_movement = False
 triangle_direction = 1
 triangle_timer = 0
 collision_detected = False
+colisiones_activas = True
 
 # Generar círculos y cuadrados
 circles = generar_circulos(10, 10)
 squares = generar_cuadrados(10, 15)
+
+# Función para verificar colisiones
+def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
+    if flip_horizontal:
+        triangle_rect = pygame.Rect(barco_rect.right - triangle_size - 60, triangle_pos[1] + 20, triangle_size * 2, triangle_size)
+        print(triangle_rect)
+    else:  
+        triangle_rect = pygame.Rect(barco_rect.left - triangle_size + 60, triangle_pos[1] + 20, triangle_size * 2, triangle_size)
+        print(triangle_rect)
+
+    obj_rect = pygame.Rect(obj_pos[0], obj_pos[1], obj_size, obj_size)
+    return triangle_rect.colliderect(obj_rect)
 
 # Bucle principal
 clock = pygame.time.Clock()
@@ -45,60 +57,71 @@ while running:
     keys = pygame.key.get_pressed()
 
     # Mover el barco y ajustar la dirección
-    if keys[pygame.K_a] or keys[pygame.K_LEFT] and barco_rect.left > -84:
+    if keys[pygame.K_a] and triangle_movement == False and barco_rect.left > -84 or keys[pygame.K_LEFT] and triangle_movement == False and triangle_movement and barco_rect.left > -84:
         barco_rect.x -= velocidad
         flip_horizontal = False
-    if keys[pygame.K_d] or keys[pygame.K_RIGHT] and barco_rect.right < constantes.ANCHURA_PANTALLA + 84:
+    if keys[pygame.K_d] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 84 or keys[pygame.K_RIGHT] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 84:
         barco_rect.x += velocidad
         flip_horizontal = True
 
     # Activar el triángulo cuando se presiona la barra espaciadora
-    if keys[pygame.K_SPACE] and not triangle_active:
-        
-        triangle_active = True
+    if keys[pygame.K_SPACE] and not triangle_movement:
+        triangle_movement = True
         triangle_direction = 1  # El triángulo comienza a bajar
         triangle_timer = pygame.time.get_ticks()
         triangle_pos[1] = 100  # Posición inicial del triángulo
         collision_detected = False
+        movimiento_permitido = False
+        velocidad = 0
 
     # Mover el triángulo si está activo
-    if triangle_active:
+    if triangle_movement:
         time_passed = (pygame.time.get_ticks() - triangle_timer) / 1000  # Tiempo en segundos
 
         if not collision_detected:  # Movimiento normal sin colisión
             if triangle_direction == 1:  # Bajando
-                movimiento_permitido = False
-                velocidad = 0
                 triangle_pos[1] += triangle_velocidad * clock.get_time() / 1000
                 if triangle_pos[1] >= constantes.ALTURA_PANTALLA - triangle_size:
+                    colisiones_activas = False  # Desactivar colisiones al llegar al fondo
                     triangle_direction = -1  # Comienza a subir
                     triangle_timer = pygame.time.get_ticks()
             elif triangle_direction == -1:  # Subiendo
                 triangle_pos[1] -= triangle_velocidad * clock.get_time() / 1000
                 if triangle_pos[1] <= 100:
+                    triangle_movement = False
+                    velocidad = 0
+                    triangle_movement = False  # Termina el ciclo
+                    triangle_pos[1] = 100
                     movimiento_permitido = True
                     velocidad = 5
-                    triangle_active = False  # Termina el ciclo
-                    triangle_pos[1] = 100
+                    colisiones_activas = True  # Activar colisiones al llegar a su altura original
+
         if collision_detected:  # Si se detecta una colisión
+            colisiones_activas = False  # Desactivar colisiones al colisionar con un objeto
             triangle_direction = -1  # Asegúra de que siempre suba tras colisión
             triangle_pos[1] -= triangle_velocidad * clock.get_time() / 1000  # Subir
             if triangle_pos[1] <= 100:  # Si ya ha subido completamente
                 movimiento_permitido = True
                 velocidad = 5
-                triangle_active = False  # Detener el triángulo
+                triangle_movement = False  # Detener el triángulo
                 collision_detected = False  # Resetear la colisión para futuros movimientos
+                colisiones_activas = True  # Activar colisiones al colisionar con un objeto
 
-        # Verifica la colisión con círculos o cuadrados
-        for circle in circles:
-            if check_collision(triangle_pos, triangle_size, (circle[0], circle[1]), 10 * 2):
-                collision_detected = True
-                triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
+        # Verifica la colisión con círculos o cuadrados solo si las colisiones están activas
+        if colisiones_activas:
+            for circle in circles:
+                if check_collision(triangle_pos, triangle_size, (circle[0], circle[1]), 10 * 2):
+                    collision_detected = True
+                    triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
+                    circles.remove(circle)
+                    colisiones_activas = False  # Desactivar colisiones
+            for square in squares:
+                if check_collision(triangle_pos, triangle_size, (square[0], square[1]), 15):
+                    collision_detected = True
+                    triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
+                    squares.remove(square)
+                    colisiones_activas = False  # Desactivar colisiones
 
-        for square in squares:
-            if check_collision(triangle_pos, triangle_size, (square[0], square[1]), 15):
-                collision_detected = True
-                triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
 
     # Dibuja el fondo
     screen.fill(constantes.CIELO)
@@ -107,8 +130,20 @@ while running:
     if flip_horizontal:
         barco_flipped = pygame.transform.flip(barco, True, False)
         screen.blit(barco_flipped, barco_rect)
+        def draw_triangle_with_barco(surface, color, pos, size):
+            point1 = (barco_rect.right-60 , pos[1]+20)
+            point2 = (barco_rect.right - size - 60, pos[1] + size+20)
+            point3 = (barco_rect.right + size - 60, pos[1] + size+20)
+            print (point1, point2, point3)
+            pygame.draw.polygon(surface, color, [point1, point2, point3])
     else:
         screen.blit(barco, barco_rect)
+        def draw_triangle_with_barco(surface, color, pos, size):
+            point1 = (barco_rect.left + 60, pos[1] + 20)
+            point2 = (barco_rect.left + size + 60, pos[1] + size + 20)
+            point3 = (barco_rect.left - size + 60, pos[1] + size + 20)
+            print (point1, point2, point3)
+            pygame.draw.polygon(surface, color, [point1, point2, point3])
 
     # Dibuja el mar
     pygame.draw.polygon(screen, constantes.MARCOLOR, constantes.MAR)
@@ -129,7 +164,21 @@ while running:
 
     # Dibujar el triángulo si está activo
     if triangle_active:
-        draw_triangle(screen, triangle_color, triangle_pos, triangle_size)
+        draw_triangle_with_barco(screen, triangle_color, triangle_pos, triangle_size)
+
+    # Dibuja el colisionador en la posición actual del triángulo
+    collision_surface = pygame.Surface((triangle_size * 2, triangle_size * 2), pygame.SRCALPHA)
+    collision_surface.fill((255, 255, 0, 128))  # Amarillo con alfa semi-transparente
+
+    # Calcular la posición del colisionador basado en la posición del triángulo
+    if flip_horizontal:
+        collision_x = barco_rect.right - triangle_size -60  # Ajusta según el barco
+    else: collision_x = barco_rect.left - triangle_size + 60 
+    collision_y = triangle_pos[1] + 20  # Posición vertical del triángulo
+
+    # Dibuja el colisionador en la pantalla
+    screen.blit(collision_surface, (collision_x, collision_y))
+
 
     # Actualizar la pantalla
     pygame.display.flip()
