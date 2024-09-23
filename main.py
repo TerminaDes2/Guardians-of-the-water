@@ -1,4 +1,4 @@
-import subprocess 
+import subprocess
 import pygame, sys
 from button import Button
 
@@ -26,7 +26,6 @@ def play():
 
         SCREEN.fill("black")
         
-        
         PLAY_TEXT = get_font(45).render("LEVELS", True, "White")
         PLAY_RECT = PLAY_TEXT.get_rect(center=(500, 100))
         SCREEN.blit(PLAY_TEXT, PLAY_RECT)
@@ -35,7 +34,6 @@ def play():
                             text_input="BEGGINER", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         ADVANCED_BUTTON = Button(image=pygame.image.load("img/Options Rect.png"), pos=(500, 430), 
                             text_input="ADVANCED", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-
 
         PLAY_BACK = Button(image=None, pos=(100, 550), 
                             text_input="Back", font=get_font(50), base_color="White", hovering_color="yellow")
@@ -86,12 +84,7 @@ def options():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
-
-
-
         pygame.display.update()
-
-import subprocess  # Agrega esta línea al inicio de tu archivo
 
 def main_menu():
     while True:
@@ -139,5 +132,4 @@ def main_menu():
                     sys.exit()
 
         pygame.display.update()
-
 main_menu()

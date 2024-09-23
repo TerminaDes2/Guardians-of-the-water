@@ -9,9 +9,11 @@ pygame.init()
 
 screen = pygame.display.set_mode((constantes.ANCHURA_PANTALLA, constantes.ALTURA_PANTALLA))
 pygame.display.set_caption("Guardians of the Water")
-
+BG = pygame.image.load("fobdo.png")
 # Cargar el barco
 barco, barco_rect = cargar_barco()
+
+fondo, fondo_rect = cargar_barco()
 
 #dibujo barra de vida
 alt_x = 14
@@ -41,7 +43,7 @@ pierdes = 5
 start_ticks = pygame.time.get_ticks()  # Tiempo inicial
 cuadrados_agarrados = 0  # Contador de cuadrados agarrados
 circulos_agarrados = 0  # Contador de circulos agarrados
-tiempo_limite = 300  # 5 minutos en segundos
+tiempo_limite = 120  # Minutos en segundos
 
 # Generar círculos y cuadrados
 circles = generar_circulos(10, 10)
@@ -53,10 +55,10 @@ circulos_eliminables = len(circles)
 # Función para verificar colisiones
 def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
     if flip_horizontal:
-        triangle_rect = pygame.Rect(barco_rect.right - triangle_size - 60, triangle_pos[1] + 20, triangle_size * 2, triangle_size)
+        triangle_rect = pygame.Rect(barco_rect.left - triangle_size + 40, triangle_pos[1] + 20, triangle_size * 2, triangle_size)
         print(triangle_rect)
     else:  
-        triangle_rect = pygame.Rect(barco_rect.left - triangle_size + 60, triangle_pos[1] + 20, triangle_size * 2, triangle_size)
+        triangle_rect = pygame.Rect(barco_rect.right - triangle_size - 40, triangle_pos[1] + 20, triangle_size * 2, triangle_size)
         print(triangle_rect)
 
     obj_rect = pygame.Rect(obj_pos[0], obj_pos[1], obj_size, obj_size)
@@ -97,10 +99,10 @@ while running:
     # Mover el barco y ajustar la dirección
     if keys[pygame.K_a] and triangle_movement == False and barco_rect.left > -84 or keys[pygame.K_LEFT] and triangle_movement == False and barco_rect.left > -84:
         barco_rect.x -= velocidad
-        flip_horizontal = False
+        flip_horizontal = True
     if keys[pygame.K_d] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 84 or keys[pygame.K_RIGHT] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 84:
         barco_rect.x += velocidad
-        flip_horizontal = True
+        flip_horizontal = False
 
     # Activar el triángulo cuando se presiona la barra espaciadora
     if keys[pygame.K_SPACE] and triangle_movement == False or keys[pygame.K_DOWN] and triangle_movement == False:
@@ -166,23 +168,25 @@ while running:
 
     # Dibuja el fondo
     screen.fill(constantes.CIELO)
+    #pygame.draw.polygon(screen, constantes.MARCOLOR, constantes.MAR)
+    #screen.blit(BG*1.5, (0, 0))
 
     # Dibuja el barco, con o sin flip según corresponda
     if flip_horizontal:
         barco_flipped = pygame.transform.flip(barco, True, False)
         screen.blit(barco_flipped, barco_rect)
         def draw_triangle_with_barco(surface, color, pos, size):
-            point1 = (barco_rect.right-60 , pos[1]+20)
-            point2 = (barco_rect.right - size - 60, pos[1] + size+20)
-            point3 = (barco_rect.right + size - 60, pos[1] + size+20)
+            point1 = (barco_rect.left + 40, pos[1] + 20)
+            point2 = (barco_rect.left + size + 40, pos[1] + size + 20)
+            point3 = (barco_rect.left - size + 40, pos[1] + size + 20)
             print (point1, point2, point3)
             pygame.draw.polygon(surface, color, [point1, point2, point3])
     else:
         screen.blit(barco, barco_rect)
         def draw_triangle_with_barco(surface, color, pos, size):
-            point1 = (barco_rect.left + 60, pos[1] + 20)
-            point2 = (barco_rect.left + size + 60, pos[1] + size + 20)
-            point3 = (barco_rect.left - size + 60, pos[1] + size + 20)
+            point1 = (barco_rect.right - 40 , pos[1] + 20)
+            point2 = (barco_rect.right - size - 40, pos[1] + size + 20)
+            point3 = (barco_rect.right + size - 40, pos[1] + size + 20)
             print (point1, point2, point3)
             pygame.draw.polygon(surface, color, [point1, point2, point3])
 
@@ -207,22 +211,9 @@ while running:
     if triangle_active:
         draw_triangle_with_barco(screen, triangle_color, triangle_pos, triangle_size)
 
-    # Dibuja el colisionador en la posición actual del triángulo
-    collision_surface = pygame.Surface((triangle_size * 2, triangle_size * 2), pygame.SRCALPHA)
-    collision_surface.fill((255, 255, 0, 128))  # Amarillo con alfa semi-transparente
-
-    # Calcular la posición del colisionador basado en la posición del triángulo
-    if flip_horizontal:
-        collision_x = barco_rect.right - triangle_size -60  # Ajusta según el barco
-    else: collision_x = barco_rect.left - triangle_size + 60 
-    collision_y = triangle_pos[1] + 20  # Posición vertical del triángulo
-
-    # Dibuja el colisionador en la pantalla
-    screen.blit(collision_surface, (collision_x, collision_y))
-
     # Mostrar el tiempo restante
     font = pygame.font.Font(None, 36)
-    tiempo_texto = font.render(f"Tiempo: {tiempo_restante / 60:.2f} min", True, (0, 0, 0))
+    tiempo_texto = font.render(f"Tiempo: {tiempo_restante / 60:.0f}:{tiempo_restante % 60:.0f}", True, (0, 0, 0))
     screen.blit(tiempo_texto, (590, 10))
 
     # Mostrar la cantidad de cuadrados agarrados
@@ -232,11 +223,12 @@ while running:
     cuadrados_texto = font.render(f"Circulos: {circulos_agarrados}", True, (0, 0, 0))
     screen.blit(cuadrados_texto, (590, 70))
 
-    pygame.draw.rect(screen, constantes.BLACK, (10, 10, 20, 90), border_radius=20)
+    pygame.draw.rect(screen, constantes.BLACK, (10, 10, 90, 20), border_radius=20)
     if cuadrados_agarrados == pierdes:
         not pygame.draw.rect(screen, constantes.RED, (0, 0, 0, 0), border_radius=20)
     if cuadrados_agarrados < pierdes:
-        pygame.draw.rect(screen, constantes.RED, (12, alt_x, 15, alt_y), border_radius=20)
+        pygame.draw.rect(screen, constantes.RED, (alt_x, 12, alt_y, 15), border_radius=20)
+
 
     # Actualizar la pantalla
     pygame.display.flip()
