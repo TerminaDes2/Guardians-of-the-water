@@ -35,7 +35,7 @@ collision_detected = False
 colisiones_activas = True
 
 #Cantidad de animales que puedes agarrar para perder
-pierdes = 8
+pierdes = 5
 
 # Variables del contador
 start_ticks = pygame.time.get_ticks()  # Tiempo inicial
