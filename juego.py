@@ -14,6 +14,7 @@ barco, barco_rect = cargar_barco()
 
 fondo, fondo_rect = cargar_barco()
 
+
 #dibujo barra de vida
 alt_x = 14
 alt_y = 84
