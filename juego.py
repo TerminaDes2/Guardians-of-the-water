@@ -81,7 +81,7 @@ while running:
     if tiempo_restante <= 0 or cuadrados_agarrados >= pierdes :
         # Mostrar mensaje de "Perdiste"
         font = pygame.font.Font(None, 74)
-        texto_perdiste = font.render("Perdiste", True, (255, 0, 0))
+        texto_perdiste = font.render("Sigue intentando", True, (255, 0, 0))
         screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 100, constantes.ALTURA_PANTALLA // 2 - 50))
         pygame.display.flip()
         pygame.time.wait(3000)
