@@ -9,7 +9,6 @@ pygame.init()
 
 screen = pygame.display.set_mode((constantes.ANCHURA_PANTALLA, constantes.ALTURA_PANTALLA))
 pygame.display.set_caption("Guardians of the Water")
-BG = pygame.image.load("fobdo.png")
 # Cargar el barco
 barco, barco_rect = cargar_barco()
 
@@ -64,6 +63,10 @@ def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
     obj_rect = pygame.Rect(obj_pos[0], obj_pos[1], obj_size, obj_size)
     return triangle_rect.colliderect(obj_rect)
 
+# Cargar la imagen de fondo y escalarla
+fondo = pygame.image.load("fobdo.png")
+fondo_escalado = pygame.transform.scale(fondo, (800, 600))
+
 # Bucle principal
 clock = pygame.time.Clock()
 running = True
@@ -83,8 +86,7 @@ while running:
         pygame.display.flip()
         pygame.time.wait(3000)
         running = False
-        continue
-
+        
     if circulos_agarrados == circulos_eliminables:
         font = pygame.font.Font(None, 74)
         texto_perdiste = font.render("Ganaste", True, (255, 215, 0))
@@ -93,14 +95,17 @@ while running:
         pygame.time.wait(3000)
         running = False
 
+    # Dibuja el fondo escalado
+    #screen.blit(fondo_escalado, (0, 0))
+
     # Obtener las teclas presionadas
     keys = pygame.key.get_pressed()
 
     # Mover el barco y ajustar la dirección
-    if keys[pygame.K_a] and triangle_movement == False and barco_rect.left > -84 or keys[pygame.K_LEFT] and triangle_movement == False and barco_rect.left > -84:
+    if keys[pygame.K_a] and triangle_movement == False and barco_rect.left > -24 or keys[pygame.K_LEFT] and triangle_movement == False and barco_rect.left > -24:
         barco_rect.x -= velocidad
         flip_horizontal = True
-    if keys[pygame.K_d] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 84 or keys[pygame.K_RIGHT] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 84:
+    if keys[pygame.K_d] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 24 or keys[pygame.K_RIGHT] and triangle_movement == False and barco_rect.right < constantes.ANCHURA_PANTALLA + 24:
         barco_rect.x += velocidad
         flip_horizontal = False
 
@@ -179,7 +184,6 @@ while running:
             point1 = (barco_rect.left + 40, pos[1] + 20)
             point2 = (barco_rect.left + size + 40, pos[1] + size + 20)
             point3 = (barco_rect.left - size + 40, pos[1] + size + 20)
-            print (point1, point2, point3)
             pygame.draw.polygon(surface, color, [point1, point2, point3])
     else:
         screen.blit(barco, barco_rect)
@@ -187,7 +191,6 @@ while running:
             point1 = (barco_rect.right - 40 , pos[1] + 20)
             point2 = (barco_rect.right - size - 40, pos[1] + size + 20)
             point3 = (barco_rect.right + size - 40, pos[1] + size + 20)
-            print (point1, point2, point3)
             pygame.draw.polygon(surface, color, [point1, point2, point3])
 
     # Dibuja el mar
@@ -198,14 +201,20 @@ while running:
         circle[0] += circle[2]
         if circle[0] - 10 > constantes.ANCHURA_PANTALLA or circle[0] + 10 < 0:
             circle[2] *= -1
-        pygame.draw.circle(screen, constantes.RED, (int(circle[0]), int(circle[1])), 10)
+        imagen = pygame.image.load("basura.png")
+        imagen = pygame.transform.scale(imagen, (imagen.get_width() * 2, imagen.get_height() * 2))
+        screen.blit(imagen,(int(circle[0]), int(circle[1])))
+
 
     # Mover y dibujar los cuadrados
     for square in squares:
+
         square[0] += square[2]
         if square[0] + 15 > constantes.ANCHURA_PANTALLA or square[0] < 0:
             square[2] *= -1
-        pygame.draw.rect(screen, constantes.BLACK, (square[0], square[1], 15, 15))
+        imagen2 = pygame.image.load("pez.png")
+        imagen2 = pygame.transform.scale(imagen2, (imagen2.get_width() * 2, imagen2.get_height() * 2))
+        screen.blit(imagen2,(square[0], square[1], 15, 15))
 
     # Dibujar el triángulo si está activo
     if triangle_active:
@@ -217,10 +226,10 @@ while running:
     screen.blit(tiempo_texto, (590, 10))
 
     # Mostrar la cantidad de cuadrados agarrados
-    cuadrados_texto = font.render(f"Cuadrados: {cuadrados_agarrados}", True, (0, 0, 0))
+    cuadrados_texto = font.render(f"Cuadrados: {cuadrados_agarrados}", True,  (0, 0, 0))
     screen.blit(cuadrados_texto, (590, 40))
 
-    cuadrados_texto = font.render(f"Circulos: {circulos_agarrados}", True, (0, 0, 0))
+    cuadrados_texto = font.render(f"Circulos: {circulos_agarrados}", True,  (0, 0, 0))
     screen.blit(cuadrados_texto, (590, 70))
 
     pygame.draw.rect(screen, constantes.BLACK, (10, 10, 90, 20), border_radius=20)
@@ -229,11 +238,10 @@ while running:
     if cuadrados_agarrados < pierdes:
         pygame.draw.rect(screen, constantes.RED, (alt_x, 12, alt_y, 15), border_radius=20)
 
-
     # Actualizar la pantalla
     pygame.display.flip()
 
-    # Limitar la tasa de frames a 60
+    # Limitar la tasa de frames
     clock.tick(60)
 
 # Cerrar Pygame

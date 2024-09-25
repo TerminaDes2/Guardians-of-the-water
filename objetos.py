@@ -1,11 +1,12 @@
 import random
+import pygame
 import constantes
 
 def generar_circulos(num_circles, circle_radius):
     circles = []
     for i in range(num_circles):
         circle_x = random.uniform(circle_radius, constantes.ANCHURA_PANTALLA - circle_radius)
-        circle_y = random.uniform(constantes.ALTURA_PANTALLA // 3, constantes.ALTURA_PANTALLA - circle_radius)
+        circle_y = random.uniform(constantes.ALTURA_PANTALLA // 3, constantes.ALTURA_PANTALLA - 20)
         circle_velocidad = asignar_velocidad(circle_y)
         circles.append([circle_x, circle_y, circle_velocidad])
     return circles
@@ -21,9 +22,9 @@ def generar_cuadrados(num_squares, square_size):
 
 def asignar_velocidad(y):
     if y >= 450:
-        return random.uniform(6, 8)
+        return random.uniform(2, 3)
     elif y >= 300:
-        return random.uniform(3, 5)
+        return random.uniform(1, 2)
     elif y >= 100:
-        return random.uniform(0, 2)
+        return random.uniform(0, 1)
     return 0
