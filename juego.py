@@ -64,8 +64,8 @@ def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
     return triangle_rect.colliderect(obj_rect)
 
 # Cargar la imagen de fondo y escalarla
-fondo = pygame.image.load("fobdo.png")
-fondo_escalado = pygame.transform.scale(fondo, (800, 600))
+#fondo = pygame.image.load("fondo22.png")
+#fondo_escalado = pygame.transform.scale(fondo, (800, 600))
 
 # Bucle principal
 clock = pygame.time.Clock()

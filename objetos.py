@@ -6,7 +6,7 @@ def generar_circulos(num_circles, circle_radius):
     circles = []
     for i in range(num_circles):
         circle_x = random.uniform(circle_radius, constantes.ANCHURA_PANTALLA - circle_radius)
-        circle_y = random.uniform(constantes.ALTURA_PANTALLA // 3, constantes.ALTURA_PANTALLA - 20)
+        circle_y = random.uniform(constantes.ALTURA_PANTALLA // 3, constantes.ALTURA_PANTALLA - 40)
         circle_velocidad = asignar_velocidad(circle_y)
         circles.append([circle_x, circle_y, circle_velocidad])
     return circles
