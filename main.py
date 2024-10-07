@@ -25,7 +25,6 @@ def play():
 
         SCREEN.fill("black")
         
-        
         PLAY_TEXT = get_font(45).render("LEVELS", True, "White")
         PLAY_RECT = PLAY_TEXT.get_rect(center=(500, 100))
         SCREEN.blit(PLAY_TEXT, PLAY_RECT)
@@ -34,7 +33,6 @@ def play():
                             text_input="BEGGINER", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         ADVANCED_BUTTON = Button(image=pygame.image.load("img/Options Rect.png"), pos=(500, 430), 
                             text_input="ADVANCED", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-
 
         PLAY_BACK = Button(image=None, pos=(100, 550), 
                             text_input="Back", font=get_font(50), base_color="White", hovering_color="yellow")
@@ -60,9 +58,7 @@ def play():
         if event.type == pygame.MOUSEBUTTONDOWN:
                   if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                     main_menu()
-            
 
-            
         pygame.display.update()
     
 def options():
@@ -89,14 +85,11 @@ def options():
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
 
-
-
         pygame.display.update()
 
 def main_menu():
     while True:
         SCREEN.blit(BG, (0, 0))
-       
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
@@ -106,7 +99,6 @@ def main_menu():
         MENU_RECT3 = MENU_TEXT3.get_rect(center=(500, 150))
         MENU_RECT1 = MENU_TEXT1.get_rect(center=(500, 150))
         MENU_RECT2 = MENU_TEXT2.get_rect(center=(500, 250))
-       
 
         PLAY_BUTTON = Button(image=None, pos=(500, 360), 
                             text_input="PLAY", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
@@ -118,8 +110,6 @@ def main_menu():
         SCREEN.blit(MENU_TEXT3, MENU_RECT3)
         SCREEN.blit(MENU_TEXT1, MENU_RECT1)
         SCREEN.blit(MENU_TEXT2, MENU_RECT2)
-      
-
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
@@ -131,6 +121,12 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    # Lanza juego.py como un nuevo proceso
+                    subprocess.Popen(["python", "juego.py"])
+                    # Cierra el programa principal
+                    pygame.quit()
+                    sys.exit()
+
                     play()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     options()
@@ -139,5 +135,4 @@ def main_menu():
                     sys.exit()
 
         pygame.display.update()
-
 main_menu()
