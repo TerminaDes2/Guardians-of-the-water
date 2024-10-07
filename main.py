@@ -1,4 +1,3 @@
-import subprocess
 import pygame, sys
 from button import Button
 
@@ -59,6 +58,7 @@ def play():
         if event.type == pygame.MOUSEBUTTONDOWN:
                   if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                     main_menu()
+
         pygame.display.update()
     
 def options():
@@ -84,11 +84,13 @@ def options():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
+
         pygame.display.update()
 
 def main_menu():
     while True:
         SCREEN.blit(BG, (0, 0))
+
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
         MENU_TEXT3 = get_font(117).render("THE GUARDIANS OF", True, "black")
@@ -125,6 +127,7 @@ def main_menu():
                     pygame.quit()
                     sys.exit()
 
+                    play()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     options()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):

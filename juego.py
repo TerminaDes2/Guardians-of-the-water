@@ -1,4 +1,5 @@
-import pygame
+
+mport pygame
 import sys
 import constantes
 from barco import cargar_barco
