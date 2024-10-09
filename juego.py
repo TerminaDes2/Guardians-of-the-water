@@ -64,8 +64,8 @@ def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
     return triangle_rect.colliderect(obj_rect)
 
 # Cargar la imagen de fondo y escalarla
-#fondo = pygame.image.load("fondo22.png")
-#fondo_escalado = pygame.transform.scale(fondo, (800, 600))
+fondo = pygame.image.load("fondo22.png")
+fondo_escalado = pygame.transform.scale(fondo, (800, 600))
 
 # Bucle principal
 clock = pygame.time.Clock()
@@ -96,7 +96,7 @@ while running:
         running = False
 
     # Dibuja el fondo escalado
-    #screen.blit(fondo_escalado, (0, 0))
+    screen.blit(fondo_escalado, (0, 0))
 
     # Obtener las teclas presionadas
     keys = pygame.key.get_pressed()
@@ -172,7 +172,7 @@ while running:
                     alt_y -= divisible / (pierdes - 1)
 
     # Dibuja el fondo
-    screen.fill(constantes.CIELO)
+    #screen.fill(constantes.CIELO)
     #pygame.draw.polygon(screen, constantes.MARCOLOR, constantes.MAR)
     #screen.blit(BG*1.5, (0, 0))
 
@@ -194,7 +194,7 @@ while running:
             pygame.draw.polygon(surface, color, [point1, point2, point3])
 
     # Dibuja el mar
-    pygame.draw.polygon(screen, constantes.MARCOLOR, constantes.MAR)
+    #pygame.draw.polygon(screen, constantes.MARCOLOR, constantes.MAR)
 
     # Mover y dibujar los círculos
     for circle in circles:
