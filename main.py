@@ -120,12 +120,14 @@ def play():
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
         
+
        
         SCREEN.fill("black")
         SCREEN.blit(BGA, (0, 0))
         
         PLAY_TEXT = get_font1(90).render("LEVELS", True, "White")
         PLAY_RECT = PLAY_TEXT.get_rect(center=(400, 100))
+
         SCREEN.blit(PLAY_TEXT, PLAY_RECT)
 
         BEGGINER_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 260), 
@@ -142,7 +144,6 @@ def play():
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         PLAY_BACK = Button(image=None, pos=(100, 550), 
                             text_input="Back", font=get_font(50), base_color="Blue", hovering_color="White")
-
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN) 
         
@@ -183,7 +184,16 @@ def play():
                 if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                   hover.play()
                   main_menu()
-        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+               if BEGGINER_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                    print ("Hola")
+                
+        if ADVANCED_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                    print ("Adios")
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+                  if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                    main_menu()
         pygame.display.update()
     
 def options():
@@ -211,8 +221,6 @@ def options():
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     hover.play()
                     main_menu()
-
-
 
         pygame.display.update()
 
@@ -287,8 +295,7 @@ def settings():
                 if SETTINGS_BACK.checkForInput(SETTINGS_MOUSE_POS):
                     hover.play()
                     main_menu()
-
-
+        SCREEN.blit(BG, (0, 0))
 
         pygame.display.update()
 
@@ -306,7 +313,6 @@ def main_menu():
         MENU_RECT2 = MENU_TEXT2.get_rect(center=(450, 115))
         MENU_RECT3 = MENU_TEXT3.get_rect(center=(200, 195))
         MENU_RECT4 = MENU_TEXT3.get_rect(center=(290, 195))
-       
 
         PLAY_BUTTON = Button(image=get_btn(button_size1), pos=(400, 305), 
                         text_input="PLAY", font=get_font2(35), base_color="white", hovering_color="White")
@@ -326,7 +332,6 @@ def main_menu():
         SCREEN.blit(MENU_TEXT2, MENU_RECT2)
         SCREEN.blit(MENU_TEXT4, MENU_RECT4)
 
-
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON, SETTINGS_BUTTON, SOUND_BUTTON, CONTROL_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.hoverEffect(MENU_MOUSE_POS)
@@ -344,6 +349,11 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     hover.play()
+                    # Lanza juego.py como un nuevo proceso
+                    subprocess.Popen(["python", "juego.py"])
+                    # Cierra el programa principal
+                    pygame.quit()
+                    sys.exit()
                     play()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     hover.play()
@@ -369,5 +379,4 @@ def main_menu():
                     sys.exit()
 
         pygame.display.update()
-
 main_menu()
