@@ -28,3 +28,5 @@ def asignar_velocidad(y):
     elif y >= 100:
         return random.uniform(0, 1)
     return 0
+
+#prueba Kris
