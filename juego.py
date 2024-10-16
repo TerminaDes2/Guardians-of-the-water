@@ -248,4 +248,4 @@ while running:
 pygame.quit()
 sys.exit()
 
-#prueba
+#prueba 999,7 la radio
