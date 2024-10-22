@@ -161,9 +161,9 @@ def play():
                 if BEGGINER_BUTTON.checkForInput(PLAY_MOUSE_POS):
                   subprocess.Popen(["python", "juego.py"])
                 if INTERMEDIATE_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  print ("Hola")
+                  subprocess.Popen(["python", "juego.py"])
                 if ADVANCED_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  print ("Adios") 
+                  subprocess.Popen(["python", "juego.py"])
                 if CONTROL_BUTTON.checkForInput(PLAY_MOUSE_POS):
                   hover.play()
                   controls()
@@ -380,3 +380,5 @@ def main_menu():
 
         pygame.display.update()
 main_menu()
+
+#Esto es una prueba de la rama Genesis
