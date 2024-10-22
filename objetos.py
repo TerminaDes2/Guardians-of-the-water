@@ -17,7 +17,8 @@ def generar_cuadrados(num_squares, square_size):
         square_x = random.uniform(0, constantes.ANCHURA_PANTALLA - square_size)
         square_y = random.uniform(260, constantes.ALTURA_PANTALLA - square_size)
         square_velocidad = asignar_velocidad(square_y)
-        squares.append([square_x, square_y, square_velocidad])
+        square_flipped = 1  # 1 indica que no está volteado, -1 indica que está volteado
+        squares.append([square_x, square_y, square_velocidad, square_flipped])
     return squares
 
 def asignar_velocidad(y):
