@@ -28,5 +28,3 @@ def asignar_velocidad(y):
     elif y >= 100:
         return random.uniform(0, 1)
     return 0
-
-#Esto es una prueba de la rama Kris
