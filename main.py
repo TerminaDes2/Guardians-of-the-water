@@ -161,9 +161,9 @@ def play():
                 if BEGGINER_BUTTON.checkForInput(PLAY_MOUSE_POS):
                   subprocess.Popen(["python", "juego.py"])
                 if INTERMEDIATE_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  subprocess.Popen(["python", "juego.py"])
+                  print ("Hola")
                 if ADVANCED_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  subprocess.Popen(["python", "juego.py"])
+                  print ("Adios") 
                 if CONTROL_BUTTON.checkForInput(PLAY_MOUSE_POS):
                   hover.play()
                   controls()

@@ -247,3 +247,4 @@ while running:
 # Cerrar Pygame
 pygame.quit()
 sys.exit()
+
