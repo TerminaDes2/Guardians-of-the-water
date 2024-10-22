@@ -220,7 +220,7 @@ while running:
             square[3] *= -1  # Invertir la dirección para el flip
         
         # Si el pez está volteado, dibujar el sprite volteado
-        if square[3] == -1:
+        if square[3] == 1:
             cuadrado_flipped = pygame.transform.flip(imagen2, True, False)
             screen.blit(cuadrado_flipped, (square[0], square[1], 15, 15))
         else:
@@ -233,7 +233,14 @@ while running:
 
     # Mostrar el tiempo restante
     font = pygame.font.Font(None, 36)
-    tiempo_texto = font.render(f"Tiempo: {tiempo_restante / 60:.0f}:{tiempo_restante % 60:.0f}", True, (0, 0, 0))
+    minutos = int(tiempo_restante // 60)
+    segundos = int(tiempo_restante % 60)
+
+    # Formatear los minutos y segundos para que siempre tengan dos dígitos
+    minutos_formateados = f"{minutos:02d}"
+    segundos_formateados = f"{segundos:02d}"
+
+    tiempo_texto = font.render(f"Tiempo: {minutos_formateados}:{segundos_formateados}", True, (0, 0, 0))
     screen.blit(tiempo_texto, (590, 10))
 
     # Mostrar la cantidad de cuadrados agarrados
