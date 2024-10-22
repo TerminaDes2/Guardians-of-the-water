@@ -110,7 +110,7 @@ while running:
         flip_horizontal = False
 
     # Activar el triángulo cuando se presiona la barra espaciadora
-    if keys[pygame.K_SPACE] and triangle_movement == False or keys[pygame.K_DOWN] and triangle_movement == False:
+    if keys[pygame.K_SPACE] and triangle_movement == False or keys[pygame.K_DOWN] and triangle_movement == False or keys[pygame.K_s] and triangle_movement == False:
         triangle_movement = True
         triangle_direction = 1  # El triángulo comienza a bajar
         triangle_timer = pygame.time.get_ticks()
