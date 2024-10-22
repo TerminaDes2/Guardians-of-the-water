@@ -206,15 +206,26 @@ while running:
         screen.blit(imagen,(int(circle[0]), int(circle[1])))
 
 
-    # Mover y dibujar los cuadrados
+    ## Mover y dibujar los peces
     for square in squares:
-
-        square[0] += square[2]
-        if square[0] + 15 > constantes.ANCHURA_PANTALLA or square[0] < 0:
-            square[2] *= -1
         imagen2 = pygame.image.load("pez.png")
         imagen2 = pygame.transform.scale(imagen2, (imagen2.get_width() * 2, imagen2.get_height() * 2))
-        screen.blit(imagen2,(square[0], square[1], 15, 15))
+        
+        # Actualizar la posición del pez
+        square[0] += square[2]
+        
+        # Cambiar la dirección si llega al borde de la pantalla
+        if square[0] + 15 > constantes.ANCHURA_PANTALLA or square[0] < 0:
+            square[2] *= -1
+            square[3] *= -1  # Invertir la dirección para el flip
+        
+        # Si el pez está volteado, dibujar el sprite volteado
+        if square[3] == -1:
+            cuadrado_flipped = pygame.transform.flip(imagen2, True, False)
+            screen.blit(cuadrado_flipped, (square[0], square[1], 15, 15))
+        else:
+            screen.blit(imagen2, (square[0], square[1], 15, 15))
+
 
     # Dibujar el triángulo si está activo
     if triangle_active:
