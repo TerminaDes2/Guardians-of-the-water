@@ -17,6 +17,25 @@ circulos = int(sys.argv[1])
 cuadrados = int(sys.argv[2])
 tiempo_limite = int(sys.argv[3])
 pierdes = int(sys.argv[4])
+idioma_actual = str(sys.argv[5])
+print(idioma_actual)
+
+textos = {
+    "en": {
+        "keep": "Keep trying",
+        "win": "You Win",
+        "time": "Time",
+        "squares": "Trash",
+        "circles": "Fishes",
+    },
+    "es": {
+       "keep": "Sigue intentando",
+        "win": "Ganaste",
+        "time": "Tiempo",
+        "squares": "Basura",
+        "circles": "Peces",
+    }
+}
 
 fondo, fondo_rect = cargar_barco()
 
@@ -87,7 +106,7 @@ while running:
     if tiempo_restante <= 0 or cuadrados_agarrados >= pierdes :
         # Mostrar mensaje de "Perdiste"
         font = pygame.font.Font(None, 74)
-        texto_perdiste = font.render("Sigue intentando", True, (255, 0, 0))
+        texto_perdiste = font.render(textos[idioma_actual]["keep"], True, (255, 0, 0))
         screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 200, constantes.ALTURA_PANTALLA // 2 - 50))
         pygame.display.flip()
         pygame.time.wait(3000)
@@ -95,7 +114,7 @@ while running:
         
     if circulos_agarrados == circulos_eliminables:
         font = pygame.font.Font(None, 74)
-        texto_perdiste = font.render("Ganaste", True, (255, 215, 0))
+        texto_perdiste = font.render(textos[idioma_actual]["win"], True, (255, 215, 0))
         screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 100, constantes.ALTURA_PANTALLA // 2 - 50))
         pygame.display.flip()
         pygame.time.wait(3000)
@@ -246,14 +265,14 @@ while running:
     minutos_formateados = f"{minutos:02d}"
     segundos_formateados = f"{segundos:02d}"
 
-    tiempo_texto = font.render(f"Tiempo: {minutos_formateados}:{segundos_formateados}", True, (0, 0, 0))
+    tiempo_texto = font.render(f'{textos[idioma_actual]["time"]}: {minutos_formateados}:{segundos_formateados}', True, (0, 0, 0))
     screen.blit(tiempo_texto, (320, 10))
 
     # Mostrar la cantidad de cuadrados agarrados
-    cuadrados_texto = font.render(f"Cuadrados: {cuadrados_agarrados}", True,  (0, 0, 0))
+    cuadrados_texto = font.render(f"{textos[idioma_actual]["squares"]}: {cuadrados_agarrados}", True,  (0, 0, 0))
     screen.blit(cuadrados_texto, (320, 40))
 
-    cuadrados_texto = font.render(f"Circulos: {circulos_agarrados}", True,  (0, 0, 0))
+    cuadrados_texto = font.render(f"{textos[idioma_actual]["circles"]}: {circulos_agarrados}", True,  (0, 0, 0))
     screen.blit(cuadrados_texto, (320, 70))
 
     pygame.draw.rect(screen, constantes.BLACK, (10, 10, 90, 20), border_radius=20)
