@@ -12,6 +12,12 @@ pygame.display.set_caption("Guardians of the Ocean")
 # Cargar el barco
 barco, barco_rect = cargar_barco()
 
+# Recibe los valores del main.py
+circulos = int(sys.argv[1])
+cuadrados = int(sys.argv[2])
+tiempo_limite = int(sys.argv[3])
+pierdes = int(sys.argv[4])
+
 fondo, fondo_rect = cargar_barco()
 
 #dibujo barra de vida
@@ -36,17 +42,17 @@ collision_detected = False
 colisiones_activas = True
 
 #Cantidad de animales que puedes agarrar para perder
-pierdes = 5
+#pierdes = 5
 
 # Variables del contador
 start_ticks = pygame.time.get_ticks()  # Tiempo inicial
 cuadrados_agarrados = 0  # Contador de cuadrados agarrados
 circulos_agarrados = 0  # Contador de circulos agarrados
-tiempo_limite = 120  # Minutos en segundos
+#tiempo_limite = 120  # Minutos en segundos
 
 # Generar círculos y cuadrados
-circles = generar_circulos(10, 10)
-squares = generar_cuadrados(10, 15)
+circles = generar_circulos(circulos, 10)
+squares = generar_cuadrados(cuadrados, 15)
 
 #copia la cantidad de elementos en la lista circles
 circulos_eliminables = len(circles)

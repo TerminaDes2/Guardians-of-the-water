@@ -4,6 +4,28 @@ from button import Button
 
 pygame.init()
 
+# Diccionario con configuraciones de los niveles
+niveles_config = {
+    "BEGGINER": {
+        "circulos": 10,
+        "cuadrados": 10,
+        "tiempo_limite": 300,  # 5 minutos
+        "pierdes": 7
+    },
+    "INTERMEDIATE": {
+        "circulos": 10,
+        "cuadrados": 10,
+        "tiempo_limite": 200,  # 3 minutos y 20 segundos
+        "pierdes": 5
+    },
+    "ADVANCED": {
+        "circulos": 10,
+        "cuadrados": 10,
+        "tiempo_limite": 120,  # 2 minutos
+        "pierdes": 3
+    }
+}
+
 SCREEN = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Menu")
 
@@ -102,8 +124,6 @@ buttonen_image = get_ingles(buttonen_size)
 sound_on_image = get_btns(buttons_size)
 sound_off_image = get_btnns(buttonns_size)
 
-
-
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("img/Bakery.ttf", size)
 
@@ -113,15 +133,11 @@ def get_font1(size): # Returns Press-Start-2P in the desired size
 def get_font2(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("img/easvhs.ttf", size)
 
-
-
 def play():
     global sound_playing
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
         
-
-       
         SCREEN.fill("black")
         SCREEN.blit(BGA, (0, 0))
         
@@ -147,7 +163,6 @@ def play():
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN) 
         
-        
         for button in [BEGGINER_BUTTON, ADVANCED_BUTTON, SETTINGS_BUTTON,SOUND_BUTTON,CONTROL_BUTTON,INTERMEDIATE_BUTTON]:
             button.changeColor(PLAY_MOUSE_POS)
             button.hoverEffect(PLAY_MOUSE_POS)
@@ -159,11 +174,15 @@ def play():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if BEGGINER_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  subprocess.Popen(["python", "juego.py"])
+                    config = niveles_config["BEGGINER"]
+                    subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"])])
                 if INTERMEDIATE_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  print ("Hola")
+                    config = niveles_config["INTERMEDIATE"]
+                    subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"])])
                 if ADVANCED_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  print ("Adios") 
+                    config = niveles_config["ADVANCED"]
+                    subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"])])
+
                 if CONTROL_BUTTON.checkForInput(PLAY_MOUSE_POS):
                   hover.play()
                   controls()
@@ -184,16 +203,7 @@ def play():
                 if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                   hover.play()
                   main_menu()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-               if BEGGINER_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                    print ("Hola")
-                
-        if ADVANCED_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                    print ("Adios")
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-                  if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
-                    main_menu()
+                  
         pygame.display.update()
     
 def options():
@@ -230,8 +240,6 @@ def controls():
 
         SCREEN.fill("white")
         
-        
-
         CONTROLS_TEXT = get_font(90).render("CONTROLS", True, "Black")
         CONTROLS_RECT = CONTROLS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(CONTROLS_TEXT, CONTROLS_RECT)
@@ -251,8 +259,6 @@ def controls():
                     hover.play()
                     main_menu()
 
-
-
         pygame.display.update()
 
 def settings():
@@ -260,12 +266,10 @@ def settings():
         SETTINGS_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.fill("white")
-        
 
         OPTIONS_TEXT = get_font(90).render("LANGUAGE", True, "black")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
-
        
         ES_BUTTON = Button(image=get_español(buttones_size), pos=(300, 360), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
@@ -337,7 +341,6 @@ def main_menu():
             button.hoverEffect(MENU_MOUSE_POS)
             button.update(SCREEN)
 
-            
             #PLAY_BUTTON.hoverEffect(MENU_MOUSE_POS)        
            # OPTIONS_BUTTON.hoverEffect(MENU_MOUSE_POS)
             #QUIT_BUTTON.hoverEffect(MENU_MOUSE_POS)
@@ -350,10 +353,10 @@ def main_menu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     hover.play()
                     # Lanza juego.py como un nuevo proceso
-                    subprocess.Popen(["python", "juego.py"])
+                    #subprocess.Popen(["python", "juego.py"])
                     # Cierra el programa principal
-                    pygame.quit()
-                    sys.exit()
+                    #pygame.quit()
+                    #sys.exit()
                     play()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     hover.play()
