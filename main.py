@@ -1,3 +1,4 @@
+import json
 import subprocess
 import pygame, sys
 from button import Button
@@ -14,6 +15,12 @@ niveles_config = {
         "tiempo_limite": 300,  # 5 minutos
         "pierdes": 7,
         "idioma": idioma_actual,
+        "v1": 0,
+        "v1,1": 1,
+        "v2": 1,
+        "v2,1": 2,
+        "v3": 2,
+        "v3,1": 3,
     },
     "INTERMEDIATE": {
         "circulos": 10,
@@ -21,6 +28,12 @@ niveles_config = {
         "tiempo_limite": 200,  # 3 minutos y 20 segundos
         "pierdes": 5,
         "idioma": idioma_actual,
+        "v1": 1,
+        "v1,1": 2,
+        "v2": 2,
+        "v2,1": 3,
+        "v3": 3,
+        "v3,1": 4,
     },
     "ADVANCED": {
         "circulos": 10,
@@ -28,6 +41,42 @@ niveles_config = {
         "tiempo_limite": 120,  # 2 minutos
         "pierdes": 3,
         "idioma": idioma_actual,
+        "v1": 2,
+        "v1,1": 3,
+        "v2": 4,
+        "v2,1":5,
+        "v3": 6,
+        "v3,1": 7,
+    }
+}
+
+velocidad = {
+     "BEGGINER": {
+        "v1": 0,
+        "v1,1": 1,
+        "v2": 1,
+        "v2,1": 2,
+        "v3": 2,
+        "v3,1": 3,
+        "vel": 7
+    },
+    "INTERMEDIATE": {
+        "v1": 1,
+        "v1,1": 2,
+        "v2": 2,
+        "v2,1": 3,
+        "v3": 3,
+        "v3,1": 4,
+        "vel": 7
+    },
+    "ADVANCED": {
+        "v1": 2,
+        "v1,1": 3,
+        "v2": 4,
+        "v2,1":5,
+        "v3": 6,
+        "v3,1": 7,
+        "vel": 7
     }
 }
 
@@ -50,7 +99,7 @@ def actualizar_niveles_config():
         },
         "ADVANCED": {
             "circulos": 10,
-            "cuadrados": 10,
+            "cuadrados": 17,
             "tiempo_limite": 120,  # 2 minutos
             "pierdes": 3,
             "idioma": idioma_actual,
@@ -295,13 +344,19 @@ def levels_begginer():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if LEVEL1_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   config = niveles_config["BEGGINER"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])])
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"])])
+                  vel = velocidad["BEGGINER"]
+                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
                 if LEVEL2_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   config = niveles_config["INTERMEDIATE"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])])
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"])])
+                  vel = velocidad["BEGGINER"]
+                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
                 if LEVEL3_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   config = niveles_config["ADVANCED"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])]) 
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"])])
+                  vel = velocidad["BEGGINER"]
+                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
                 if CONTROL_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   hover.play()
                   controls()
@@ -365,15 +420,22 @@ def levels_advanced():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                # Si se selecciona el nivel BEGGINER
                 if LEVEL1_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   config = niveles_config["BEGGINER"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])])
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"])])
+                  vel = velocidad["BEGGINER"]
+                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
                 if LEVEL2_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   config = niveles_config["INTERMEDIATE"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])])
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"])])
+                  vel = velocidad["BEGGINER"]
+                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
                 if LEVEL3_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   config = niveles_config["ADVANCED"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])]) 
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"])])
+                  vel = velocidad["BEGGINER"]
+                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
                 if CONTROL_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   hover.play()
                   controls()

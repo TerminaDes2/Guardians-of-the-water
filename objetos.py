@@ -1,7 +1,14 @@
-import random
-import pygame
-import constantes
+import random, sys, constantes, json
 
+sp1 = int(sys.argv[6])
+sp11 = int(sys.argv[7])
+sp2 = int(sys.argv[8])
+sp22 = int(sys.argv[9])
+sp3 = int(sys.argv[10])
+sp33 = int(sys.argv[11])
+
+#print("Se imprimen variables velocidad", sp1, sp2)
+print(str(sys.argv))
 def generar_circulos(num_circles, circle_radius):
     circles = []
     for i in range(num_circles):
@@ -23,11 +30,11 @@ def generar_cuadrados(num_squares, square_size):
 
 def asignar_velocidad(y):
     if y >= 450:
-        return random.uniform(2, 3)
+        return random.uniform(sp1, sp11)
     elif y >= 300:
-        return random.uniform(1, 2)
+        return random.uniform(sp2, sp22)
     elif y >= 100:
-        return random.uniform(0, 1)
+        return random.uniform(sp3, sp33)
     return 0
 
 #prueba Kris

@@ -25,15 +25,15 @@ textos = {
         "keep": "Keep trying",
         "win": "You Win",
         "time": "Time",
-        "squares": "Trash",
-        "circles": "Fishes",
+        "squares": "Fishes",
+        "circles": "Trash",
     },
     "es": {
        "keep": "Sigue intentando",
         "win": "Ganaste",
         "time": "Tiempo",
-        "squares": "Basura",
-        "circles": "Peces",
+        "squares": "Peces",
+        "circles": "Basura",
     }
 }
 
