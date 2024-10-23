@@ -4,7 +4,6 @@ from button import Button
 
 pygame.init()
 
-# Variable global para el idioma
 idioma_actual = "en"
 
 # Diccionario con configuraciones de los niveles
