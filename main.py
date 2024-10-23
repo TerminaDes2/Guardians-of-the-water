@@ -83,7 +83,6 @@ buttons_image = get_btns(buttons_size)
 
 sound_on_image = get_btns(buttons_size)
 
-
 def get_btnns(size): 
  btnns_image = pygame.image.load("img/nosound.png")
  resized_image = pygame.transform.scale(btnns_image, size)
@@ -95,7 +94,6 @@ buttonns_image = get_btnns(buttonns_size)
 sound_off_image = get_btnns(buttonns_size)
 
 sound_playing = True  # Initially, the sound is playing
-
 
 def get_btnc(size): 
  btnc_image = pygame.image.load("img/control.png")
@@ -124,8 +122,6 @@ buttonen_image = get_ingles(buttonen_size)
 sound_on_image = get_btns(buttons_size)
 sound_off_image = get_btnns(buttonns_size)
 
-
-
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("img/Bakery.ttf", size)
 
@@ -135,14 +131,10 @@ def get_font1(size): # Returns Press-Start-2P in the desired size
 def get_font2(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("img/easvhs.ttf", size)
 
-
-
 def play():
     global sound_playing
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
-        
-
        
         SCREEN.fill("black")
         SCREEN.blit(BGA, (0, 0))
@@ -166,7 +158,6 @@ def play():
                             text_input="Back", font=get_font(50), base_color="Blue", hovering_color="White")
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN) 
-        
         
         for button in [BEGGINER_BUTTON, ADVANCED_BUTTON, SETTINGS_BUTTON,SOUND_BUTTON,CONTROL_BUTTON]:
             button.changeColor(PLAY_MOUSE_POS)
@@ -236,7 +227,6 @@ def levels_begginer():
                             text_input="Back", font=get_font(50), base_color="Blue", hovering_color="White")
         LEVELSB_BACK.changeColor(LEVELSB_MOUSE_POS)
         LEVELSB_BACK.update(SCREEN) 
-        
         
         for button in [LEVEL1_BUTTON, LEVEL2_BUTTON, LEVEL3_BUTTON, SETTINGS_BUTTON,SOUND_BUTTON,CONTROL_BUTTON]:
             button.changeColor(LEVELSB_MOUSE_POS)
@@ -308,8 +298,7 @@ def levels_advanced():
         LEVELSA_BACK = Button(image=None, pos=(100, 550), 
                             text_input="Back", font=get_font(50), base_color="Blue", hovering_color="White")
         LEVELSA_BACK.changeColor(LEVELSA_MOUSE_POS)
-        LEVELSA_BACK.update(SCREEN) 
-        
+        LEVELSA_BACK.update(SCREEN)  
         
         for button in [LEVEL1_BUTTON, LEVEL2_BUTTON, LEVEL3_BUTTON, SETTINGS_BUTTON,SOUND_BUTTON,CONTROL_BUTTON]:
             button.changeColor(LEVELSA_MOUSE_POS)
@@ -358,7 +347,6 @@ def options():
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.fill("white")
-        
 
         OPTIONS_TEXT = get_font(50).render("ABOUT US", True, "Black")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 100))
@@ -380,9 +368,6 @@ def options():
                     main_menu()
 
         pygame.display.update()
-
-
-   
 
 def controls():
    while True:
@@ -420,12 +405,10 @@ def settings():
         SETTINGS_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.fill("white")
-        
 
         OPTIONS_TEXT = get_font(90).render("LANGUAGE", True, "black")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
-
        
         ES_BUTTON = Button(image=get_español(buttones_size), pos=(300, 360), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
@@ -455,7 +438,6 @@ def settings():
                 if SETTINGS_BACK.checkForInput(SETTINGS_MOUSE_POS):
                     hover.play()
                     main_menu()
-        SCREEN.blit(BG, (0, 0))
 
         pygame.display.update()
 
