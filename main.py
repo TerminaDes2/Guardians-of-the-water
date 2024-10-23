@@ -4,6 +4,101 @@ from button import Button
 
 pygame.init()
 
+# Variable global para el idioma
+idioma_actual = "en"
+
+# Diccionario con configuraciones de los niveles
+niveles_config = {
+    "BEGGINER": {
+        "circulos": 10,
+        "cuadrados": 10,
+        "tiempo_limite": 300,  # 5 minutos
+        "pierdes": 7,
+        "idioma": idioma_actual,
+    },
+    "INTERMEDIATE": {
+        "circulos": 10,
+        "cuadrados": 10,
+        "tiempo_limite": 200,  # 3 minutos y 20 segundos
+        "pierdes": 5,
+        "idioma": idioma_actual,
+    },
+    "ADVANCED": {
+        "circulos": 10,
+        "cuadrados": 10,
+        "tiempo_limite": 120,  # 2 minutos
+        "pierdes": 3,
+        "idioma": idioma_actual,
+    }
+}
+
+def actualizar_niveles_config():
+    global niveles_config
+    niveles_config = {
+        "BEGGINER": {
+            "circulos": 10,
+            "cuadrados": 10,
+            "tiempo_limite": 300,  # 5 minutos
+            "pierdes": 7,
+            "idioma": idioma_actual,
+        },
+        "INTERMEDIATE": {
+            "circulos": 10,
+            "cuadrados": 10,
+            "tiempo_limite": 200,  # 3 minutos y 20 segundos
+            "pierdes": 5,
+            "idioma": idioma_actual,
+        },
+        "ADVANCED": {
+            "circulos": 10,
+            "cuadrados": 10,
+            "tiempo_limite": 120,  # 2 minutos
+            "pierdes": 3,
+            "idioma": idioma_actual,
+        }
+    }
+
+
+# Diccionarios para manejar los idiomas
+textos = {
+    "en": {
+        "play": "Play",
+        "levels": "Levels",
+        "settings": "Settings",
+        "language": "Language",
+        "controls": "Controls",
+        "back": "Back",
+        "level1": "Level 1",
+        "level2": "Level 2",
+        "level3": "Level 3",
+        "begginer": "Beginner",
+        "advanced": "Advanced",
+        "about": "About Us",
+        "sound": "Sound",
+        "nosound": "No Sound",
+        "pause": "Pause",
+        "quit": "Quit",
+    },
+    "es": {
+        "play": "Jugar",
+        "levels": "Niveles",
+        "settings": "Configuración",
+        "language": "Idioma",
+        "controls": "Controles",
+        "back": "Regresar",
+        "level1": "Nivel 1",
+        "level2": "Nivel 2",
+        "level3": "Nivel 3",
+        "begginer": "Principiante",
+        "advanced": "Avanzado",
+        "about": "Sobre Nosotros",
+        "sound": "Sonido",
+        "nosound": "Sin Sonido",
+        "pause": "Pausa",
+        "quit": "Salir",
+    }
+}
+
 SCREEN = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Menu")
 
@@ -61,7 +156,6 @@ buttons_image = get_btns(buttons_size)
 
 sound_on_image = get_btns(buttons_size)
 
-
 def get_btnns(size): 
  btnns_image = pygame.image.load("img/nosound.png")
  resized_image = pygame.transform.scale(btnns_image, size)
@@ -73,7 +167,6 @@ buttonns_image = get_btnns(buttonns_size)
 sound_off_image = get_btnns(buttonns_size)
 
 sound_playing = True  # Initially, the sound is playing
-
 
 def get_btnc(size): 
  btnc_image = pygame.image.load("img/control.png")
@@ -102,8 +195,6 @@ buttonen_image = get_ingles(buttonen_size)
 sound_on_image = get_btns(buttons_size)
 sound_off_image = get_btnns(buttonns_size)
 
-
-
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("img/Bakery.ttf", size)
 
@@ -113,42 +204,32 @@ def get_font1(size): # Returns Press-Start-2P in the desired size
 def get_font2(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("img/easvhs.ttf", size)
 
-
-
 def play():
     global sound_playing
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
-        
-
        
         SCREEN.fill("black")
         SCREEN.blit(BGA, (0, 0))
         
-        PLAY_TEXT = get_font1(90).render("LEVELS", True, "White")
+        # Texto de "LEVELS" según el idioma
+        PLAY_TEXT = get_font(90).render(textos[idioma_actual]["levels"], True, "White")
         PLAY_RECT = PLAY_TEXT.get_rect(center=(400, 100))
-
         SCREEN.blit(PLAY_TEXT, PLAY_RECT)
 
-        BEGGINER_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 260), 
-                            text_input="BEGGINER", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-        INTERMEDIATE_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 360), 
-                            text_input="INTERMEDIATE", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-        ADVANCED_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 460), 
-                            text_input="ADVANCED", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        BEGGINER_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 290), 
+                            text_input=textos[idioma_actual]["begginer"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        ADVANCED_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 420), 
+                            text_input=textos[idioma_actual]["advanced"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         SETTINGS_BUTTON = Button(image=get_btnb(buttonb_size), pos=(750, 540), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-        SOUND_BUTTON = Button(image=sound_on_image if sound_playing else sound_off_image, pos=(750, 450), 
-                            text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-        CONTROL_BUTTON = Button(image=get_btnc(buttonc_size), pos=(750, 370), 
-                            text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         PLAY_BACK = Button(image=None, pos=(100, 550), 
-                            text_input="Back", font=get_font(50), base_color="Blue", hovering_color="White")
+                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Blue", hovering_color="White")
+
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN) 
         
-        
-        for button in [BEGGINER_BUTTON, ADVANCED_BUTTON, SETTINGS_BUTTON,SOUND_BUTTON,CONTROL_BUTTON,INTERMEDIATE_BUTTON]:
+        for button in [BEGGINER_BUTTON, ADVANCED_BUTTON, SETTINGS_BUTTON]:
             button.changeColor(PLAY_MOUSE_POS)
             button.hoverEffect(PLAY_MOUSE_POS)
             button.update(SCREEN)
@@ -159,18 +240,76 @@ def play():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if BEGGINER_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  subprocess.Popen(["python", "juego.py"])
-                if INTERMEDIATE_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  print ("Hola")
+                    hover.play()
+                    levels_begginer()
                 if ADVANCED_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                  print ("Adios") 
-                if CONTROL_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                    hover.play()
+                    levels_advanced()
+                if SETTINGS_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                    hover.play()
+                    settings()
+                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                    hover.play()
+                    main_menu()
+
+        pygame.display.update()
+
+def levels_begginer():
+   global sound_playing
+   while True:
+        LEVELSB_MOUSE_POS = pygame.mouse.get_pos()
+               
+        SCREEN.fill("black")
+        SCREEN.blit(BGA, (0, 0))
+        
+        LEVELSB_TEXT = get_font(90).render(textos[idioma_actual]["begginer"], True, "White")
+        LEVELSB_RECT = LEVELSB_TEXT.get_rect(center=(400, 100))
+
+        SCREEN.blit(LEVELSB_TEXT, LEVELSB_RECT)
+
+        LEVEL1_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 260), 
+                            text_input=textos[idioma_actual]["level1"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        LEVEL2_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 360), 
+                            text_input=textos[idioma_actual]["level2"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        LEVEL3_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 460), 
+                            text_input=textos[idioma_actual]["level3"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        SETTINGS_BUTTON = Button(image=get_btnb(buttonb_size), pos=(750, 540), 
+                            text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        SOUND_BUTTON = Button(image=sound_on_image if sound_playing else sound_off_image, pos=(750, 450), 
+                            text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        CONTROL_BUTTON = Button(image=get_btnc(buttonc_size), pos=(750, 370), 
+                            text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        LEVELSB_BACK = Button(image=None, pos=(100, 550), 
+                            text_input="Back", font=get_font(50), base_color="Blue", hovering_color="White")
+        LEVELSB_BACK.changeColor(LEVELSB_MOUSE_POS)
+        LEVELSB_BACK.update(SCREEN) 
+        
+        for button in [LEVEL1_BUTTON, LEVEL2_BUTTON, LEVEL3_BUTTON, SETTINGS_BUTTON,SOUND_BUTTON,CONTROL_BUTTON]:
+            button.changeColor(LEVELSB_MOUSE_POS)
+            button.hoverEffect(LEVELSB_MOUSE_POS)
+            button.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if LEVEL1_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
+                  config = niveles_config["BEGGINER"]
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])])
+                if LEVEL2_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
+                  config = niveles_config["INTERMEDIATE"]
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])])
+                if LEVEL3_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
+                  config = niveles_config["ADVANCED"]
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])]) 
+                if CONTROL_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   hover.play()
                   controls()
-                if SETTINGS_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                if SETTINGS_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   hover.play()
                   settings()
-                if SOUND_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                if SOUND_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   hover.play()
                   sound_playing = not sound_playing
 
@@ -181,19 +320,82 @@ def play():
                         pygame.mixer.music.pause()  # Pause the music
                        
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                if LEVELSB_BACK.checkForInput(LEVELSB_MOUSE_POS):
                   hover.play()
-                  main_menu()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-               if BEGGINER_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                    print ("Hola")
-                
-        if ADVANCED_BUTTON.checkForInput(PLAY_MOUSE_POS):
-                    print ("Adios")
+                  play()
+        
+        pygame.display.update()
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-                  if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
-                    main_menu()
+def levels_advanced():
+   global sound_playing
+   while True:
+        LEVELSA_MOUSE_POS = pygame.mouse.get_pos()
+               
+        SCREEN.fill("black")
+        SCREEN.blit(BGA, (0, 0))
+        
+        LEVELSA_TEXT = get_font(90).render(textos[idioma_actual]["advanced"], True, "White")
+        LEVELSA_RECT = LEVELSA_TEXT.get_rect(center=(400, 100))
+
+        SCREEN.blit(LEVELSA_TEXT, LEVELSA_RECT)
+
+        LEVEL1_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 260), 
+                            text_input=textos[idioma_actual]["level1"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        LEVEL2_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 360), 
+                            text_input=textos[idioma_actual]["level2"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        LEVEL3_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 460), 
+                            text_input=textos[idioma_actual]["level3"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        SETTINGS_BUTTON = Button(image=get_btnb(buttonb_size), pos=(750, 540), 
+                            text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        SOUND_BUTTON = Button(image=sound_on_image if sound_playing else sound_off_image, pos=(750, 450), 
+                            text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        CONTROL_BUTTON = Button(image=get_btnc(buttonc_size), pos=(750, 370), 
+                            text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
+        LEVELSA_BACK = Button(image=None, pos=(100, 550), 
+                            text_input="Back", font=get_font(50), base_color="Blue", hovering_color="White")
+        LEVELSA_BACK.changeColor(LEVELSA_MOUSE_POS)
+        LEVELSA_BACK.update(SCREEN)  
+        
+        for button in [LEVEL1_BUTTON, LEVEL2_BUTTON, LEVEL3_BUTTON, SETTINGS_BUTTON,SOUND_BUTTON,CONTROL_BUTTON]:
+            button.changeColor(LEVELSA_MOUSE_POS)
+            button.hoverEffect(LEVELSA_MOUSE_POS)
+            button.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if LEVEL1_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
+                  config = niveles_config["BEGGINER"]
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])])
+                if LEVEL2_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
+                  config = niveles_config["INTERMEDIATE"]
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])])
+                if LEVEL3_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
+                  config = niveles_config["ADVANCED"]
+                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"])]) 
+                if CONTROL_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
+                  hover.play()
+                  controls()
+                if SETTINGS_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
+                  hover.play()
+                  settings()
+                if SOUND_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
+                  hover.play()
+                  sound_playing = not sound_playing
+
+                  if sound_playing:
+                        pygame.mixer.music.unpause()  # Resume the music
+                        
+                  else:
+                        pygame.mixer.music.pause()  # Pause the music
+                       
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if LEVELSA_BACK.checkForInput(LEVELSA_MOUSE_POS):
+                  hover.play()
+                  play()
+        
         pygame.display.update()
     
 def options():
@@ -201,14 +403,13 @@ def options():
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.fill("white")
-        
 
-        OPTIONS_TEXT = get_font(50).render("ABOUT US", True, "Black")
+        OPTIONS_TEXT = get_font(50).render(textos[idioma_actual]["about"], True, "Black")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
         OPTIONS_BACK = Button(image=None, pos=(100, 550), 
-                            text_input="BACK", font=get_font(50), base_color="Black", hovering_color="blue")
+                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
 
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
@@ -229,15 +430,13 @@ def controls():
         CONTROLS_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.fill("white")
-        
-        
 
-        CONTROLS_TEXT = get_font(90).render("CONTROLS", True, "Black")
+        CONTROLS_TEXT = get_font(90).render(textos[idioma_actual]["controls"], True, "Black")
         CONTROLS_RECT = CONTROLS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(CONTROLS_TEXT, CONTROLS_RECT)
 
         CONTROLS_BACK = Button(image=None, pos=(100, 550), 
-                            text_input="BACK", font=get_font(50), base_color="Black", hovering_color="blue")
+                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
         
         CONTROLS_BACK.changeColor(CONTROLS_MOUSE_POS)
         CONTROLS_BACK.update(SCREEN)
@@ -251,28 +450,26 @@ def controls():
                     hover.play()
                     main_menu()
 
-
-
         pygame.display.update()
 
 def settings():
+    global idioma_actual
     while True:
         SETTINGS_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.fill("white")
-        
 
-        OPTIONS_TEXT = get_font(90).render("LANGUAGE", True, "black")
+        # Texto de "Language" según el idioma
+        OPTIONS_TEXT = get_font(90).render(textos[idioma_actual]["language"], True, "black")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
-
        
         ES_BUTTON = Button(image=get_español(buttones_size), pos=(300, 360), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         EN_BUTTON = Button(image=get_ingles(buttonen_size), pos=(500, 360), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         SETTINGS_BACK = Button(image=None, pos=(100, 550), 
-                            text_input="BACK", font=get_font(50), base_color="Black", hovering_color="blue")
+                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
         
         SETTINGS_BACK.changeColor(SETTINGS_MOUSE_POS)
         SETTINGS_BACK.update(SCREEN)
@@ -281,23 +478,24 @@ def settings():
             button.changeColor(SETTINGS_MOUSE_POS)
             button.hoverEffect(SETTINGS_MOUSE_POS)
             button.update(SCREEN)
-            
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if EN_BUTTON.checkForInput(SETTINGS_MOUSE_POS):
-                  print ("Hola")
                 if ES_BUTTON.checkForInput(SETTINGS_MOUSE_POS):
-                  print ("Hola")
-            if event.type == pygame.MOUSEBUTTONDOWN:
+                    idioma_actual = "es"  # Cambiar a español
+                    actualizar_niveles_config()  # Actualizar la configuración de niveles
+                if EN_BUTTON.checkForInput(SETTINGS_MOUSE_POS):
+                    idioma_actual = "en"  # Cambiar a inglés
+                    actualizar_niveles_config()  # Actualizar la configuración de niveles
                 if SETTINGS_BACK.checkForInput(SETTINGS_MOUSE_POS):
                     hover.play()
                     main_menu()
-        SCREEN.blit(BG, (0, 0))
 
         pygame.display.update()
+
 
 def main_menu():
     global sound_playing
@@ -308,16 +506,16 @@ def main_menu():
         MENU_TEXT1 = get_font(50).render("THE", True, "#F2637E")
         MENU_TEXT2 = get_font(95).render("GUARDIANS", True, "white")
         MENU_TEXT3 = get_font(60).render("of", True, "#FFA500")
-        MENU_TEXT4 = get_font1(70).render("THE Ocean", True, "#0A6AA6")
+        MENU_TEXT4 = get_font(70).render("THE OCEAN", True, "#0A6AA6")
         MENU_RECT1 = MENU_TEXT1.get_rect(center=(150, 115))
         MENU_RECT2 = MENU_TEXT2.get_rect(center=(450, 115))
         MENU_RECT3 = MENU_TEXT3.get_rect(center=(200, 195))
         MENU_RECT4 = MENU_TEXT3.get_rect(center=(290, 195))
 
         PLAY_BUTTON = Button(image=get_btn(button_size1), pos=(400, 305), 
-                        text_input="PLAY", font=get_font2(35), base_color="white", hovering_color="White")
+                        text_input=textos[idioma_actual]["play"], font=get_font2(35), base_color="white", hovering_color="White")
         OPTIONS_BUTTON = Button(image=get_btn(button_size2), pos=(400, 410), 
-                            text_input="ABOUT", font=get_font2(35), base_color="white", hovering_color="White")
+                            text_input=textos[idioma_actual]["about"], font=get_font2(35), base_color="white", hovering_color="White")
         SETTINGS_BUTTON = Button(image=get_btnb(buttonb_size), pos=(750, 540), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         SOUND_BUTTON = Button(image=sound_on_image if sound_playing else sound_off_image, pos=(750, 450), 
@@ -325,7 +523,7 @@ def main_menu():
         CONTROL_BUTTON = Button(image=get_btnc(buttonc_size), pos=(750, 370), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         QUIT_BUTTON = Button(image=get_btn(button_size3), pos=(400, 520), 
-                            text_input="QUIT", font=get_font2(35), base_color="white", hovering_color="White")
+                            text_input=textos[idioma_actual]["quit"], font=get_font2(35), base_color="white", hovering_color="White")
 
         SCREEN.blit(MENU_TEXT3, MENU_RECT3)
         SCREEN.blit(MENU_TEXT1, MENU_RECT1)
@@ -337,7 +535,6 @@ def main_menu():
             button.hoverEffect(MENU_MOUSE_POS)
             button.update(SCREEN)
 
-            
             #PLAY_BUTTON.hoverEffect(MENU_MOUSE_POS)        
            # OPTIONS_BUTTON.hoverEffect(MENU_MOUSE_POS)
             #QUIT_BUTTON.hoverEffect(MENU_MOUSE_POS)
@@ -349,11 +546,6 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     hover.play()
-                    # Lanza juego.py como un nuevo proceso
-                    subprocess.Popen(["python", "juego.py"])
-                    # Cierra el programa principal
-                    pygame.quit()
-                    sys.exit()
                     play()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     hover.play()
@@ -379,6 +571,5 @@ def main_menu():
                     sys.exit()
 
         pygame.display.update()
-main_menu()
 
-#Esto es una prueba de la rama Genesis
+main_menu()
