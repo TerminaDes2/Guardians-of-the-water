@@ -88,7 +88,7 @@ while running:
         # Mostrar mensaje de "Perdiste"
         font = pygame.font.Font(None, 74)
         texto_perdiste = font.render("Sigue intentando", True, (255, 0, 0))
-        screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 100, constantes.ALTURA_PANTALLA // 2 - 50))
+        screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 200, constantes.ALTURA_PANTALLA // 2 - 50))
         pygame.display.flip()
         pygame.time.wait(3000)
         running = False
@@ -247,14 +247,14 @@ while running:
     segundos_formateados = f"{segundos:02d}"
 
     tiempo_texto = font.render(f"Tiempo: {minutos_formateados}:{segundos_formateados}", True, (0, 0, 0))
-    screen.blit(tiempo_texto, (590, 10))
+    screen.blit(tiempo_texto, (320, 10))
 
     # Mostrar la cantidad de cuadrados agarrados
     cuadrados_texto = font.render(f"Cuadrados: {cuadrados_agarrados}", True,  (0, 0, 0))
-    screen.blit(cuadrados_texto, (590, 40))
+    screen.blit(cuadrados_texto, (320, 40))
 
     cuadrados_texto = font.render(f"Circulos: {circulos_agarrados}", True,  (0, 0, 0))
-    screen.blit(cuadrados_texto, (590, 70))
+    screen.blit(cuadrados_texto, (320, 70))
 
     pygame.draw.rect(screen, constantes.BLACK, (10, 10, 90, 20), border_radius=20)
     if cuadrados_agarrados == pierdes:
