@@ -7,7 +7,7 @@ sp22 = int(sys.argv[9])
 sp3 = int(sys.argv[10])
 sp33 = int(sys.argv[11])
 
-#print("Se imprimen variables velocidad", sp1, sp2)
+print("Se imprimen variables velocidad", sp1, sp2, sp3)
 print(str(sys.argv))
 def generar_circulos(num_circles, circle_radius):
     circles = []

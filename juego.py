@@ -9,6 +9,37 @@ pygame.init()
 
 screen = pygame.display.set_mode((constantes.ANCHURA_PANTALLA, constantes.ALTURA_PANTALLA))
 pygame.display.set_caption("Guardians of the Ocean")
+
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("img/Bakery.ttf", size)
+
+def render_text(text, size, color, position, surface):
+    font = get_font(size)
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect(center=position)
+    surface.blit(text_surface, text_rect)
+
+# Cargar imágenes del botón de pausa y reanudar
+pause_image = pygame.image.load("img/pausa.png")
+resume_image = pygame.image.load("img/play.png")
+
+# Escalar las imágenes a un tamaño adecuado para el botón
+pause_image = pygame.transform.scale(pause_image, (90, 90))
+resume_image = pygame.transform.scale(resume_image, (70, 70))
+
+
+# Inicializar el rectángulo del botón de pausa
+button_rect = pygame.Rect(685, 20, 100, 50)
+button_rect2 = pygame.Rect(695, 29, 100, 50)
+
+# Dibujar el botón basado en el estado de pausa
+def draw_button(screen, paused):
+    if paused:
+        screen.blit(resume_image, button_rect2.topleft)  # Mostrar imagen de "reanudar"
+    else:
+        screen.blit(pause_image, button_rect.topleft)  # Mostrar imagen de "pausa"
+
+
 # Cargar el barco
 barco, barco_rect = cargar_barco()
 
@@ -18,6 +49,7 @@ cuadrados = int(sys.argv[2])
 tiempo_limite = int(sys.argv[3])
 pierdes = int(sys.argv[4])
 idioma_actual = str(sys.argv[5])
+advanced = int(sys.argv[12])
 print(idioma_actual)
 
 textos = {
@@ -52,7 +84,12 @@ flip_horizontal = False
 triangle_color = (0, 255, 0)
 triangle_pos = [constantes.ANCHURA_PANTALLA // 2, 100]
 triangle_size = 20
-triangle_velocidad = 300
+
+if advanced == 1:
+    triangle_velocidad = 450
+else:
+    triangle_velocidad = 800
+
 triangle_active = True
 triangle_movement = False
 triangle_direction = 1
@@ -80,10 +117,10 @@ circulos_eliminables = len(circles)
 def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
     if flip_horizontal:
         triangle_rect = pygame.Rect(barco_rect.left - triangle_size + 40, triangle_pos[1] + 20, triangle_size * 2, triangle_size)
-        print(triangle_rect)
+        #print(triangle_rect)
     else:  
         triangle_rect = pygame.Rect(barco_rect.right - triangle_size - 40, triangle_pos[1] + 20, triangle_size * 2, triangle_size)
-        print(triangle_rect)
+        #print(triangle_rect)
 
     obj_rect = pygame.Rect(obj_pos[0], obj_pos[1], obj_size, obj_size)
     return triangle_rect.colliderect(obj_rect)
@@ -92,39 +129,70 @@ def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
 fondo = pygame.image.load("fondo22.png")
 fondo_escalado = pygame.transform.scale(fondo, (800, 600))
 
+# Variables de tiempo
+start_ticks = pygame.time.get_ticks()
+paused_time = 0
+paused_ticks = 0
+
+
 # Bucle principal
 clock = pygame.time.Clock()
+paused = False
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # Verificar si el tiempo se agotó
-    segundos_transcurridos = (pygame.time.get_ticks() - start_ticks) / 1000
+        # Obtener las teclas presionadas
+        keys = pygame.key.get_pressed()
+
+        # Detectar clic del ratón o boton escape
+        if event.type == pygame.MOUSEBUTTONDOWN or keys[pygame.K_ESCAPE]:
+            mouse_pos = pygame.mouse.get_pos()
+            if button_rect.collidepoint(mouse_pos) or keys[pygame.K_ESCAPE]:
+                paused = not paused  # Cambiar el estado de pausa
+                if paused:
+                    paused_ticks = pygame.time.get_ticks()  # Marca el tiempo al momento de pausar
+                else:
+                    # Acumula el tiempo de pausa al reanudar
+                    paused_time += pygame.time.get_ticks() - paused_ticks
+
+    # Dibuja el fondo y botón de pausa
+    screen.blit(fondo_escalado, (0, 0))
+    draw_button(screen, paused)
+
+    if paused:
+        font_size = 80
+        texto_pausa = get_font(font_size).render("PAUSA", True, (255, 255, 255))
+        screen.blit(texto_pausa, (constantes.ANCHURA_PANTALLA // 2 - 100, constantes.ALTURA_PANTALLA // 2 - 50))
+        pygame.display.flip()
+        continue
+
+    # Calcula el tiempo restante ajustado
+    segundos_transcurridos = (pygame.time.get_ticks() - start_ticks - paused_time) / 1000
     tiempo_restante = tiempo_limite - segundos_transcurridos
+
+    # Verificar si el tiempo se agotó
     if tiempo_restante <= 0 or cuadrados_agarrados >= pierdes :
         # Mostrar mensaje de "Perdiste"
-        font = pygame.font.Font(None, 74)
-        texto_perdiste = font.render(textos[idioma_actual]["keep"], True, (255, 0, 0))
-        screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 200, constantes.ALTURA_PANTALLA // 2 - 50))
+        screen.fill("black")
+        font_size = 60
+        
+        texto_perdiste= get_font(font_size).render("¡Sigue intentando!", True, (255, 255, 255))
+        screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 250, constantes.ALTURA_PANTALLA // 2 - 100))
         pygame.display.flip()
         pygame.time.wait(3000)
         running = False
         
     if circulos_agarrados == circulos_eliminables:
         font = pygame.font.Font(None, 74)
-        texto_perdiste = font.render(textos[idioma_actual]["win"], True, (255, 215, 0))
-        screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 100, constantes.ALTURA_PANTALLA // 2 - 50))
+        font_size=60
+        texto_ganaste = get_font(font_size).render("Ganaste", True, (255, 255, 255))
+        screen.blit(texto_ganaste, (constantes.ANCHURA_PANTALLA // 200, constantes.ALTURA_PANTALLA // 300))
         pygame.display.flip()
         pygame.time.wait(3000)
         running = False
-
-    # Dibuja el fondo escalado
-    screen.blit(fondo_escalado, (0, 0))
-
-    # Obtener las teclas presionadas
-    keys = pygame.key.get_pressed()
 
     # Mover el barco y ajustar la dirección
     if keys[pygame.K_a] and triangle_movement == False and barco_rect.left > -24 or keys[pygame.K_LEFT] and triangle_movement == False and barco_rect.left > -24:
@@ -193,8 +261,10 @@ while running:
                     squares.remove(square) #Elimina el cuadrado golpeado
                     cuadrados_agarrados += 1  # Aumentar contador de cuadrados agarrados
                     colisiones_activas = False  # Desactivar colisiones
-                    alt_x += divisible / (pierdes - 1)
-                    alt_y -= divisible / (pierdes - 1)
+                    
+                    #Calcula la barra de vida
+                    alt_x += (divisible / (pierdes - 1))*2
+                    alt_y -= (divisible / (pierdes - 1))*2
 
     # Dibuja el fondo
     #screen.fill(constantes.CIELO)
@@ -230,34 +300,31 @@ while running:
         imagen = pygame.transform.scale(imagen, (imagen.get_width() * 2, imagen.get_height() * 2))
         screen.blit(imagen,(int(circle[0]), int(circle[1])))
 
-
-    ## Mover y dibujar los peces
+    # Mover y dibujar los cuadrados
     for square in squares:
         imagen2 = pygame.image.load("pez.png")
         imagen2 = pygame.transform.scale(imagen2, (imagen2.get_width() * 2, imagen2.get_height() * 2))
-        
-        # Actualizar la posición del pez
         square[0] += square[2]
-        
-        # Cambiar la dirección si llega al borde de la pantalla
         if square[0] + 15 > constantes.ANCHURA_PANTALLA or square[0] < 0:
             square[2] *= -1
             square[3] *= -1  # Invertir la dirección para el flip
-        
-        # Si el pez está volteado, dibujar el sprite volteado
+        imagen2 = pygame.image.load("pez.png")
+        imagen2 = pygame.transform.scale(imagen2, (imagen2.get_width() * 2, imagen2.get_height() * 2))
         if square[3] == 1:
             cuadrado_flipped = pygame.transform.flip(imagen2, True, False)
             screen.blit(cuadrado_flipped, (square[0], square[1], 15, 15))
         else:
             screen.blit(imagen2, (square[0], square[1], 15, 15))
 
-
     # Dibujar el triángulo si está activo
     if triangle_active:
         draw_triangle_with_barco(screen, triangle_color, triangle_pos, triangle_size)
 
     # Mostrar el tiempo restante
-    font = pygame.font.Font(None, 36)
+    pygame.draw.rect(screen, constantes.BLACK, (510, 45, 170, 37), border_radius=20)
+    pygame.draw.rect(screen, constantes.WHITE, (510, 47, 170, 32), border_radius=20)
+    font = pygame.font.Font(None, 50)
+    font_size=40
     minutos = int(tiempo_restante // 60)
     segundos = int(tiempo_restante % 60)
 
@@ -265,21 +332,41 @@ while running:
     minutos_formateados = f"{minutos:02d}"
     segundos_formateados = f"{segundos:02d}"
 
-    tiempo_texto = font.render(f'{textos[idioma_actual]["time"]}: {minutos_formateados}:{segundos_formateados}', True, (0, 0, 0))
-    screen.blit(tiempo_texto, (320, 10))
+    tiempo_texto = font.render(f'{minutos_formateados}:{segundos_formateados}', True, (0, 0, 0))
+    screen.blit(tiempo_texto, (555, 47))
 
     # Mostrar la cantidad de cuadrados agarrados
-    cuadrados_texto = font.render(f"{textos[idioma_actual]["squares"]}: {cuadrados_agarrados}", True,  (0, 0, 0))
-    screen.blit(cuadrados_texto, (320, 40))
+    #cuadrados_texto = font.render(f"Cuadrados: {cuadrados_agarrados}", True,  (0, 0, 0))
+    #screen.blit(cuadrados_texto, (590, 40))
+    font = pygame.font.Font(None, 40)
+    font_size = 30
+    cuadrados_texto = get_font(font_size).render(f"{circulos_agarrados} / 10", True,  (0, 0, 0))
+    screen.blit(cuadrados_texto, (360, 70))
 
-    cuadrados_texto = font.render(f"{textos[idioma_actual]["circles"]}: {circulos_agarrados}", True,  (0, 0, 0))
-    screen.blit(cuadrados_texto, (320, 70))
-
-    pygame.draw.rect(screen, constantes.BLACK, (10, 10, 90, 20), border_radius=20)
+    pygame.draw.rect(screen, constantes.BLACK, (110, 45, 170, 35), border_radius=20)
     if cuadrados_agarrados == pierdes:
         not pygame.draw.rect(screen, constantes.RED, (0, 0, 0, 0), border_radius=20)
     if cuadrados_agarrados < pierdes:
-        pygame.draw.rect(screen, constantes.RED, (alt_x, 12, alt_y, 15), border_radius=20)
+        pygame.draw.rect(screen, constantes.RED, (alt_x + 110 - 10, 47,  alt_y + 80, 30), border_radius=20)
+     
+    # Cargar imágenes 
+        peztriste_image = pygame.image.load("img/PEZTRISTE.png")
+        reloj_image = pygame.image.load("img/RELOJ.png")
+        basura_image = pygame.image.load("img/basura.png")
+
+        # Escalar las imágenes a un tamaño adecuado para el botón
+        peztriste_image = pygame.transform.scale(peztriste_image, (100, 100))
+        reloj_image = pygame.transform.scale(reloj_image, (60, 60))
+        basura_image = pygame.transform.scale(basura_image, (60, 60))
+
+        peztriste_pos = (55, 10)  # Posición del pez triste
+        reloj_pos = (475, 29)      # Posición del reloj
+        basura_pos = (360, 15)
+
+        # Mostrar las imágenes en la pantalla
+        screen.blit(peztriste_image, peztriste_pos)
+        screen.blit(reloj_image, reloj_pos)
+        screen.blit(basura_image, basura_pos)
 
     # Actualizar la pantalla
     pygame.display.flip()
