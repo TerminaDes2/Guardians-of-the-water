@@ -59,13 +59,17 @@ textos = {
         "time": "Time",
         "squares": "Fishes",
         "circles": "Trash",
+        "lost": "Try again",
+        "pause": "Pause",
     },
     "es": {
        "keep": "Sigue intentando",
-        "win": "Ganaste",
+        "win": "Felicidades, ganaste",
         "time": "Tiempo",
         "squares": "Peces",
         "circles": "Basura",
+        "lost": "Sigue intentando",
+        "pause": "Pausa",
     }
 }
 
@@ -134,7 +138,6 @@ start_ticks = pygame.time.get_ticks()
 paused_time = 0
 paused_ticks = 0
 
-
 # Bucle principal
 clock = pygame.time.Clock()
 paused = False
@@ -164,7 +167,7 @@ while running:
 
     if paused:
         font_size = 80
-        texto_pausa = get_font(font_size).render("PAUSA", True, (255, 255, 255))
+        texto_pausa = get_font(font_size).render(textos[idioma_actual]["pause"], True, (255, 255, 255))
         screen.blit(texto_pausa, (constantes.ANCHURA_PANTALLA // 2 - 100, constantes.ALTURA_PANTALLA // 2 - 50))
         pygame.display.flip()
         continue
@@ -179,7 +182,7 @@ while running:
         screen.fill("black")
         font_size = 60
         
-        texto_perdiste= get_font(font_size).render("¡Sigue intentando!", True, (255, 255, 255))
+        texto_perdiste= get_font(font_size).render(textos[idioma_actual]["lost"], True, (255, 255, 255))
         screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 250, constantes.ALTURA_PANTALLA // 2 - 100))
         pygame.display.flip()
         pygame.time.wait(3000)
@@ -188,8 +191,8 @@ while running:
     if circulos_agarrados == circulos_eliminables:
         font = pygame.font.Font(None, 74)
         font_size=60
-        texto_ganaste = get_font(font_size).render("Ganaste", True, (255, 255, 255))
-        screen.blit(texto_ganaste, (constantes.ANCHURA_PANTALLA // 200, constantes.ALTURA_PANTALLA // 300))
+        texto_ganaste = get_font(font_size).render(textos[idioma_actual]["win"], True, (255, 255, 255))
+        screen.blit(texto_ganaste, (constantes.ANCHURA_PANTALLA // 2 - 70, constantes.ALTURA_PANTALLA // 2))
         pygame.display.flip()
         pygame.time.wait(3000)
         running = False
