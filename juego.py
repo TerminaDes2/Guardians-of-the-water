@@ -3,7 +3,7 @@ import sys
 import constantes
 from barco import cargar_barco
 from objetos import generar_circulos, generar_cuadrados
-
+#s
 # Inicializar Pygame
 pygame.init()
 
