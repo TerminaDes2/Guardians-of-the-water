@@ -2,10 +2,11 @@ import json
 import subprocess
 import pygame, sys
 from button import Button
-
+from juego import juego
+from objetos import objetos
 pygame.init()
 
-idioma_actual = "en"
+idioma_actual = "es"
 advanced = 0
 # Diccionario con configuraciones de los niveles
 niveles_config = {
@@ -21,7 +22,8 @@ niveles_config = {
         "v2,1": 2,
         "v3": 2,
         "v3,1": 3,
-        "advanced": advanced
+        "advanced": advanced,
+        "niv":1
     },
     "INTERMEDIATE": {
         "circulos": 10,
@@ -35,7 +37,8 @@ niveles_config = {
         "v2,1": 3,
         "v3": 3,
         "v3,1": 4,
-        "advanced": advanced
+        "advanced": advanced,
+        "niv":2
     },
     "ADVANCED": {
         "circulos": 10,
@@ -49,10 +52,11 @@ niveles_config = {
         "v2,1":5,
         "v3": 6,
         "v3,1": 7,
-        "advanced": advanced
+        "advanced": advanced,
+        "niv":3
     }
 }
-
+#sa
 velocidad = {
      "BEGGINER": {
         "v1": 0,
@@ -98,7 +102,8 @@ def actualizar_niveles_config():
         "v2,1": 2,
         "v3": 2,
         "v3,1": 3,
-        "advanced": advanced
+        "advanced": advanced,
+        "niv":1
     },
     "INTERMEDIATE": {
         "circulos": 10,
@@ -112,7 +117,8 @@ def actualizar_niveles_config():
         "v2,1": 3,
         "v3": 3,
         "v3,1": 4,
-        "advanced": advanced
+        "advanced": advanced,
+        "niv":2
     },
     "ADVANCED": {
         "circulos": 10,
@@ -126,7 +132,8 @@ def actualizar_niveles_config():
         "v2,1":5,
         "v3": 6,
         "v3,1": 7,
-        "advanced": advanced
+        "advanced": advanced,
+        "niv":3
     }
     }
 
@@ -396,26 +403,50 @@ def levels_begginer():
                 if LEVEL1_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   advanced = 0
                   actualizar_niveles_config()
-                  config = niveles_config["BEGGINER"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"]), str(config["advanced"])])
-                  vel = velocidad["BEGGINER"]
-                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
+                  sp1 = 0
+                  sp2 = 1
+                  sp3 = 2
+                  sp4 = 3
+                  objetos(sp1, sp2, sp3, sp4)
+                  circulos = 10
+                  cuadrados = 10
+                  tiempo_limite = 300
+                  pierdes = 7
+                  niv = 1
+                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
 
                 if LEVEL2_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   advanced = 0
                   actualizar_niveles_config()
-                  config = niveles_config["INTERMEDIATE"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"]), str(config["advanced"])])
-                  vel = velocidad["BEGGINER"]
-                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
+                  sp1 = 1
+                  sp2 = 2
+                  sp3 = 3
+                  sp4 = 4
+                  objetos(sp1, sp2, sp3, sp4)
+                  circulos = 10
+                  cuadrados = 10
+                  tiempo_limite = 200
+                  pierdes = 5
+                  niv = 2
+                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
 
                 if LEVEL3_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   advanced = 0
                   actualizar_niveles_config()
-                  config = niveles_config["ADVANCED"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"]), str(config["advanced"])])
-                  vel = velocidad["BEGGINER"]
-                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
+                  sp1 = 2
+                  sp2 = 3
+                  sp3 = 4
+                  sp4 = 5
+                  objetos(sp1, sp2, sp3, sp4)
+                  circulos = 10
+                  cuadrados = 10
+                  tiempo_limite = 150
+                  pierdes = 3
+                  niv = 1
+                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
 
                 if CONTROL_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                   hover.play()
@@ -486,26 +517,50 @@ def levels_advanced():
                 if LEVEL1_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   advanced = 1
                   actualizar_niveles_config()
-                  config = niveles_config["BEGGINER"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"]), str(config["advanced"])])
-                  vel = velocidad["BEGGINER"]
-                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
+                  sp1 = 0
+                  sp2 = 1
+                  sp3 = 2
+                  sp4 = 3
+                  objetos(sp1, sp2, sp3, sp4)
+                  circulos = 10
+                  cuadrados = 10
+                  tiempo_limite = 300
+                  pierdes = 7
+                  niv = 1
+                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
 
                 if LEVEL2_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   advanced = 1
                   actualizar_niveles_config()
-                  config = niveles_config["INTERMEDIATE"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"]), str(config["advanced"])])
-                  vel = velocidad["BEGGINER"]
-                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
+                  sp1 = 1
+                  sp2 = 2
+                  sp3 = 3
+                  sp4 = 4
+                  objetos(sp1, sp2, sp3, sp4)
+                  circulos = 10
+                  cuadrados = 10
+                  tiempo_limite = 200
+                  pierdes = 5
+                  niv = 2
+                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
 
                 if LEVEL3_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   advanced = 1
                   actualizar_niveles_config()
-                  config = niveles_config["ADVANCED"]
-                  subprocess.Popen(["python", "juego.py", str(config["circulos"]), str(config["cuadrados"]), str(config["tiempo_limite"]), str(config["pierdes"]), str(config["idioma"]), str(config["v1"]), str(config["v1,1"]), str(config["v2"]), str(config["v2,1"]), str(config["v3"]), str(config["v3,1"]), str(config["advanced"])])
-                  vel = velocidad["BEGGINER"]
-                  subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
+                  sp1 = 2
+                  sp2 = 3
+                  sp3 = 4
+                  sp4 = 5
+                  objetos(sp1, sp2, sp3, sp4)
+                  circulos = 10
+                  cuadrados = 10
+                  tiempo_limite = 150
+                  pierdes = 3
+                  niv = 3
+                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
                 if CONTROL_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   hover.play()
                   controls()
