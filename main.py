@@ -413,7 +413,10 @@ def levels_begginer():
                   tiempo_limite = 300
                   pierdes = 7
                   niv = 1
-                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  resultado = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  if resultado == "volver":
+                      print("Regresando al menú principal...")
+                      levels_begginer()
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
 
                 if LEVEL2_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
@@ -429,7 +432,10 @@ def levels_begginer():
                   tiempo_limite = 200
                   pierdes = 5
                   niv = 2
-                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  resultado = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  if resultado == "volver":
+                      print("Regresando al menú principal...")
+                      levels_begginer()
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
 
                 if LEVEL3_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
@@ -445,7 +451,10 @@ def levels_begginer():
                   tiempo_limite = 150
                   pierdes = 3
                   niv = 1
-                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  resultado = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  if resultado == "volver":
+                      print("Regresando al menú principal...")
+                      levels_begginer()
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
 
                 if CONTROL_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
@@ -527,7 +536,10 @@ def levels_advanced():
                   tiempo_limite = 300
                   pierdes = 7
                   niv = 1
-                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  resultado = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  if resultado == "volver":
+                      print("Regresando al menú principal...")
+                      levels_advanced()
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
 
                 if LEVEL2_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
@@ -543,7 +555,10 @@ def levels_advanced():
                   tiempo_limite = 200
                   pierdes = 5
                   niv = 2
-                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  resultado = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  if resultado == "volver":
+                      print("Regresando al menú principal...")
+                      levels_advanced()
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
 
                 if LEVEL3_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
@@ -559,7 +574,10 @@ def levels_advanced():
                   tiempo_limite = 150
                   pierdes = 3
                   niv = 3
-                  juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  resultado = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+                  if resultado == "volver":
+                      print("Regresando al menú principal...")
+                      levels_advanced()
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
                 if CONTROL_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                   hover.play()

@@ -240,7 +240,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
             pygame.time.wait(3000)
             niv += 1
             gestor_niv(niv, idioma_actual, advanced)
-            #running = False
+            #return "volver"
 
         keys = pygame.key.get_pressed()
         # Mover el barco y ajustar la dirección
@@ -338,7 +338,6 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
                 point2 = (barco_rect.right - size - 40, pos[1] + size + 20)
                 #pygame.draw.polygon(surface, color, [point1, point2])
                 
-
         # Dibuja el mar
         #pygame.draw.polygon(screen, constantes.MARCOLOR, constantes.MAR)
 
