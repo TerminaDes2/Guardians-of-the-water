@@ -46,7 +46,18 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
 
     def gestor_niv(niv, idioma_actual, advanced):
         global circulos, cuadrados, tiempo_limite, pierdes
-        #niv = niv + 1
+
+        if niv == 1:
+            circulos = 10
+            cuadrados = 10
+            tiempo_limite = 300
+            pierdes = 7
+            sp1 = 0
+            sp2 = 1
+            sp3 = 2
+            sp4 = 3
+            objetos(sp1, sp2, sp3, sp4)
+            juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
         if niv == 2:
             circulos = 10
             cuadrados = 10
@@ -69,6 +80,9 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
             sp4 = 5
             objetos(sp1, sp2, sp3, sp4)
             juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+        if niv > 3:
+            print("Felicidades, completaste el juego")
+
 
     # Recibe los valores del main.py
     print(circulos)
@@ -214,7 +228,8 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
             screen.blit(texto_perdiste, (constantes.ANCHURA_PANTALLA // 2 - 250, constantes.ALTURA_PANTALLA // 2 - 100))
             pygame.display.flip()
             pygame.time.wait(3000)
-            running = False
+            gestor_niv(niv, idioma_actual, advanced)
+            #running = False
             
         if circulos_agarrados == circulos_eliminables:
             font = pygame.font.Font(None, 74)
