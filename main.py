@@ -449,6 +449,8 @@ def play():
                 if BEGGINER_BUTTON.checkForInput(PLAY_MOUSE_POS):
                     hover.play()
                     levels_begginer()
+                    hover.play()
+                    levels_begginer()
                 if ADVANCED_BUTTON.checkForInput(PLAY_MOUSE_POS):
                     hover.play()
                     levels_advanced()
@@ -661,10 +663,13 @@ def options():
         SCREEN.fill("white")
 
         OPTIONS_TEXT = get_font(50).render(textos[idioma_actual]["about"], True, "Black")
+
+        OPTIONS_TEXT = get_font(50).render(textos[idioma_actual]["about"], True, "Black")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
         OPTIONS_BACK = Button(image=None, pos=(100, 550), 
+                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
                             text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
 
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
@@ -694,6 +699,7 @@ def controls():
         #SCREEN.blit(CONTROLS_TEXT, CONTROLS_RECT)
 
         CONTROLS_BACK = Button(image=None, pos=(100, 550), 
+                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
                             text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
         
         CONTROLS_BACK.changeColor(CONTROLS_MOUSE_POS)
@@ -762,6 +768,7 @@ def settings():
             button.hoverEffect(SETTINGS_MOUSE_POS)
             button.update(SCREEN)
 
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -770,7 +777,12 @@ def settings():
                 if ES_BUTTON.checkForInput(SETTINGS_MOUSE_POS):
                     idioma_actual = "es"  # Cambiar a español
                     actualizar_niveles_config()  # Actualizar la configuración de niveles
+                if ES_BUTTON.checkForInput(SETTINGS_MOUSE_POS):
+                    idioma_actual = "es"  # Cambiar a español
+                    actualizar_niveles_config()  # Actualizar la configuración de niveles
                 if EN_BUTTON.checkForInput(SETTINGS_MOUSE_POS):
+                    idioma_actual = "en"  # Cambiar a inglés
+                    actualizar_niveles_config()  # Actualizar la configuración de niveles
                     idioma_actual = "en"  # Cambiar a inglés
                     actualizar_niveles_config()  # Actualizar la configuración de niveles
                 if SETTINGS_BACK.checkForInput(SETTINGS_MOUSE_POS):
@@ -868,6 +880,7 @@ def main_menu():
             button.hoverEffect(MENU_MOUSE_POS)
             button.update(SCREEN)
 
+
             #PLAY_BUTTON.hoverEffect(MENU_MOUSE_POS)        
             #OPTIONS_BUTTON.hoverEffect(MENU_MOUSE_POS)
             #QUIT_BUTTON.hoverEffect(MENU_MOUSE_POS)
@@ -904,5 +917,6 @@ def main_menu():
                     sys.exit()
 
         pygame.display.update()
+
 
 main_menu()
