@@ -703,5 +703,3 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
     # Cerrar Pygame
     pygame.quit()
     sys.exit()
-
-
