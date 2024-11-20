@@ -1,11 +1,15 @@
-import random, sys, constantes, json
+import random, sys, constantes
+sp1 = 0
+sp2 = 1
+sp3 = 2
+sp4 = 3
 
-sp1 = int(sys.argv[6])
-sp11 = int(sys.argv[7])
-sp2 = int(sys.argv[8])
-sp22 = int(sys.argv[9])
-sp3 = int(sys.argv[10])
-sp33 = int(sys.argv[11])
+def objetos(v1, v2, v3, v4):
+    global sp1, sp2, sp3, sp4
+    sp1 = v1
+    sp2 = v2
+    sp3 = v3
+    sp4 = v4
 
 print("Se imprimen variables velocidad", sp1, sp2, sp3)
 print(str(sys.argv))
@@ -17,7 +21,7 @@ def generar_circulos(num_circles, circle_radius):
         circle_velocidad = asignar_velocidad(circle_y)
         circles.append([circle_x, circle_y, circle_velocidad])
     return circles
-
+#sa
 def generar_cuadrados(num_squares, square_size):
     squares = []
     for i in range(num_squares):
@@ -30,11 +34,11 @@ def generar_cuadrados(num_squares, square_size):
 
 def asignar_velocidad(y):
     if y >= 450:
-        return random.uniform(sp1, sp11)
+        return random.uniform(sp1, sp2)
     elif y >= 300:
-        return random.uniform(sp2, sp22)
+        return random.uniform(sp2, sp3)
     elif y >= 100:
-        return random.uniform(sp3, sp33)
+        return random.uniform(sp3, sp4)
     return 0
 
 #prueba Kris
