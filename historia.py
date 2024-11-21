@@ -16,10 +16,15 @@ def historia():
     icon = pygame.transform.scale(icon, (icon.get_width() * 10, icon.get_height() * 10))
     pygame.display.set_icon(icon)
 
+    #hover = pygame.mixer.Sound("img/miedo.mp3")
+    pygame.mixer.music.load("img/miedo.mp3")
+    musiquita = pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.5)
+
 
 
     # Cargar el video usando OpenCV
-    cap = cv2.VideoCapture('img/historia.mp4')
+    cap = cv2.VideoCapture('img/historiatk.mp4')
 
     if not cap.isOpened():
         print("Error al abrir el video")
@@ -44,7 +49,7 @@ def historia():
         frame = cv2.flip(frame, 0)
 
         # Redimensionar el frame para que ocupe toda la pantalla
-        frame = cv2.resize(frame, (700, 800))
+        frame = cv2.resize(frame, (600, 800))
 
         # Convertir el frame de BGR (OpenCV) a RGB (Pygame)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -53,7 +58,7 @@ def historia():
         frame_surface = pygame.surfarray.make_surface(frame)
 
         # Dibujar el frame en la pantalla
-        screen.blit(frame_surface, (0, -100))  # Coordenadas (0, 0) para ocupar toda la pantalla
+        screen.blit(frame_surface, (0, 0))  # Coordenadas (0, 0) para ocupar toda la pantalla
 
         keys = pygame.key.get_pressed()
         # Salir si se presiona la tecla 'q'
