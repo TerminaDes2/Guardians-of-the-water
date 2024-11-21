@@ -6,7 +6,9 @@ from juego import juego
 from objetos import objetos
 from juego import mostrar_botones, siguiente_nivel
 from botones_pausa import mostrar_pausa
-
+#from creditos import reproducir_video
+#from creditos_ingles import reproducir_video_ingles
+import cv2
 
 pygame.init()
 
@@ -210,6 +212,7 @@ textos = {
         "nosound": "No Sound",
         "pause": "Pause",
         "quit": "Quit",
+        "instrucciones": "img/instruesp1",
     },
     "es": {
         "play": "Jugar",
@@ -228,6 +231,7 @@ textos = {
         "nosound": "Sin Sonido",
         "pause": "Pausa",
         "quit": "Salir",
+        "instrucciones": "img/instruingle1",
     }
 }
 
@@ -236,6 +240,147 @@ pygame.display.set_caption("Guardians the Ocean")
 icon = pygame.image.load("img/LogoG.png")
 icon = pygame.transform.scale(icon, (icon.get_width() * 10, icon.get_height() * 10))
 pygame.display.set_icon(icon)
+
+def reproducir_video():
+    # Inicializar Pygame y OpenCV
+    pygame.mixer.init()
+
+    # Cargar el video
+    cap = cv2.VideoCapture('img/creditos_español.mp4')
+    if not cap.isOpened():
+        print("Error al abrir el video")
+        sys.exit()
+
+    clock = pygame.time.Clock()
+    running = True
+
+    OPTIONS_BACK = Button(
+            image=None, 
+            pos=(100, 550), 
+            text_input=textos[idioma_actual]["back"], 
+            font=get_font(50), 
+            base_color="Black", 
+            hovering_color="blue"
+        )
+   
+    while running:
+        
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                    cap.release()
+                    hover.play()
+                    main_menu()
+
+
+        # Leer el siguiente frame del video
+        ret, frame = cap.read()
+        if not ret:
+            cap.release()
+            main_menu()  # Volver al menú principal cuando termine el video
+            return
+        
+
+        # Rotar el video 90 grados a la derecha
+        frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        frame = cv2.flip(frame, 0)
+
+        # Redimensionar y centrar el video
+        video_width, video_height = 360, 640  # Cambiar las dimensiones después de rotar
+        frame = cv2.resize(frame, (video_width, video_height))
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame_surface = pygame.surfarray.make_surface(frame)
+        video_x = (800 - video_height) // 2
+        video_y = (600 - video_width) // 2
+        # Dibujar el fondo y el video centrado
+        SCREEN.blit(BG_escalado, (0, 0))
+        SCREEN.blit(frame_surface, (video_x, video_y))
+        
+        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_BACK.update(SCREEN)
+
+        # Actualizar la pantalla
+        pygame.display.update()
+        clock.tick(30)
+
+def reproducir_video_ingles():
+    # Inicializar Pygame y OpenCV
+    pygame.mixer.init()
+
+    # Cargar el video
+    cap = cv2.VideoCapture('img/creditos_ingles.mp4')
+    if not cap.isOpened():
+        print("Error al abrir el video")
+        sys.exit()
+
+    clock = pygame.time.Clock()
+    running = True
+
+    OPTIONS_BACK = Button(
+            image=None, 
+            pos=(100, 550), 
+            text_input=textos[idioma_actual]["back"], 
+            font=get_font(50), 
+            base_color="Black", 
+            hovering_color="blue"
+        )
+   
+    while running:
+        
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                    cap.release()
+                    main_menu()
+                    return
+                    
+
+
+        # Leer el siguiente frame del video
+        ret, frame = cap.read()
+        if not ret:
+            cap.release()
+        
+            return
+        
+         # Leer el siguiente frame del video
+        ret, frame = cap.read()
+        if not ret:
+            cap.release()
+            return
+        
+
+        # Rotar el video 90 grados a la derecha
+        frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        frame = cv2.flip(frame, 0)
+
+        # Redimensionar y centrar el video
+        video_width, video_height = 360, 640  # Cambiar las dimensiones después de rotar
+        frame = cv2.resize(frame, (video_width, video_height))
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame_surface = pygame.surfarray.make_surface(frame)
+        video_x = (800 - video_height) // 2
+        video_y = (600 - video_width) // 2
+        # Dibujar el fondo y el video centrado
+        SCREEN.blit(BG_escalado, (0, 0))
+        SCREEN.blit(frame_surface, (video_x, video_y))
+        
+        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_BACK.update(SCREEN)
+
+        # Actualizar la pantalla
+        pygame.display.update()
+        clock.tick(20)
 
 fondo = pygame.image.load("img/fondo_dia.png")
 fondo_escalado = pygame.transform.scale(fondo, (800, 600))
@@ -249,9 +394,15 @@ nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 BG_escalado = pygame.transform.scale(BG, nuevo_tamaño)
 
 BGC = pygame.image.load("img/instruesp1.jpeg")
+
 nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 # Escalar la imagen al nuevo tamaño
 BGC_escalado = pygame.transform.scale(BGC, nuevo_tamaño)
+
+BGINSIN = pygame.image.load("img/instruingle1.jpeg")
+nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
+# Escalar la imagen al nuevo tamaño
+BGC_escalado2 = pygame.transform.scale(BGINSIN, nuevo_tamaño)
 
 BGA = pygame.image.load("img/fondo_nivs2.jpg")
 # Escalar la imagen al nuevo tamaño
@@ -327,6 +478,34 @@ def get_quitaratras(size):
 buttonq_size = (95, 95)
 buttonq_image = get_quitaratras(buttonq_size)
 buttonq_pos = (140, 480)
+
+#PECES
+def get_pezfeliz(size):
+ pezfeliz_image = pygame.image.load("img/feliz.png")
+ resized_imagefeliz = pygame.transform.scale(pezfeliz_image, size)
+ return resized_imagefeliz
+
+buttonf_size = (100, 90)
+buttonf_image = get_pezfeliz(buttonf_size)
+buttonf_pos = (120, 200)
+
+def get_pezpreocupado(size):
+ pezpreocupado_image = pygame.image.load("img/preocupado.png")
+ resized_imagepreocupado = pygame.transform.scale(pezpreocupado_image, size)
+ return resized_imagepreocupado
+
+buttonpr_size = (115, 80)
+buttonpr_image = get_pezpreocupado(buttonpr_size)
+buttonpr_pos = (118, 315)
+
+def get_peztriste(size):
+ peztriste_image = pygame.image.load("img/enojado.png")
+ resized_imagetriste = pygame.transform.scale(peztriste_image, size)
+ return resized_imagetriste
+
+buttont_size = (100, 85)
+buttont_image = get_peztriste(buttont_size)
+buttont_pos = (120, 420)
 
 def get_btnplay(size):
  btnbeg_image = pygame.image.load("img/btnnivss.png")
@@ -421,6 +600,7 @@ def play():
         SCREEN.blit(buttoni_image, buttoni_pos)
 
 
+
         BEGGINER_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 290), 
                             text_input=textos[idioma_actual]["begginer"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         ADVANCED_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 420), 
@@ -492,11 +672,16 @@ def levels_begginer():
 
         SCREEN.blit(LEVELSB_TEXT, LEVELSB_RECT)
 
-        LEVEL1_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 260), 
+        
+        SCREEN.blit(buttonf_image, buttonf_pos)
+        SCREEN.blit(buttonpr_image, buttonpr_pos)
+        SCREEN.blit(buttont_image, buttont_pos)
+
+        LEVEL1_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 240), 
                             text_input=textos[idioma_actual]["level1"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-        LEVEL2_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 370), 
+        LEVEL2_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 350), 
                             text_input=textos[idioma_actual]["level2"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-        LEVEL3_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 480), 
+        LEVEL3_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 460), 
                             text_input=textos[idioma_actual]["level3"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         SETTINGS_BUTTON = Button(image=get_btnb(buttonb_size), pos=(750, 520), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
@@ -583,12 +768,15 @@ def levels_advanced():
 
 
         SCREEN.blit(LEVELSA_TEXT, LEVELSA_RECT)
+        SCREEN.blit(buttonf_image, buttonf_pos)
+        SCREEN.blit(buttonpr_image, buttonpr_pos)
+        SCREEN.blit(buttont_image, buttont_pos)
 
-        LEVEL1_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 260), 
+        LEVEL1_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 240), 
                                text_input=textos[idioma_actual]["level1"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-        LEVEL2_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 370), 
+        LEVEL2_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 350), 
                                text_input=textos[idioma_actual]["level2"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
-        LEVEL3_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 480), 
+        LEVEL3_BUTTON = Button(image=get_btnplay(buttonbeg_size), pos=(400, 460), 
                                text_input=textos[idioma_actual]["level3"], font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
         SETTINGS_BUTTON = Button(image=buttonb_image, pos=(750, 520), 
                             text_input="", font=get_font2(35), base_color="#d7fcd4", hovering_color="White")
@@ -655,20 +843,40 @@ def levels_advanced():
 
     
 def options():
+   
+
+
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+        SCREEN.fill("white")  # Asegúrate de que el video no continúe en bucle
+        if idioma_actual == "es":
+            reproducir_video()
+        if idioma_actual == "en":
+            reproducir_video_ingles()
 
-        SCREEN.fill("white")
+        SCREEN.fill("white")  # Asegúrate de que el video no continúe en bucle
+        if idioma_actual == "es":
+           reproducir_video()
+        if idioma_actual == "en":
+            reproducir_video_ingles()
+       
 
         OPTIONS_TEXT = get_font(50).render(textos[idioma_actual]["about"], True, "Black")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 100))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
-        OPTIONS_BACK = Button(image=None, pos=(100, 550), 
-                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
+        OPTIONS_BACK = Button(
+            image=None, 
+            pos=(100, 550), 
+            text_input=textos[idioma_actual]["back"], 
+            font=get_font(50), 
+            base_color="Black", 
+            hovering_color="blue"
+        )
 
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -681,20 +889,24 @@ def options():
 
         pygame.display.update()
 
+
 def controls():
    global p
    while True:
         CONTROLS_MOUSE_POS = pygame.mouse.get_pos()
         
         SCREEN.fill("white")
-        SCREEN.blit(BGC_escalado, (0, 0))
+        if idioma_actual == "es":
+           SCREEN.blit(BGC_escalado, (0, 0))
+        if idioma_actual == "en":
+            SCREEN.blit(BGC_escalado2, (0, 0))
 
        # CONTROLS_TEXT = get_font(90).render(textos[idioma_actual]["controls"], True, "Black")
         #CONTROLS_RECT = CONTROLS_TEXT.get_rect(center=(400, 100))
         #SCREEN.blit(CONTROLS_TEXT, CONTROLS_RECT)
 
         CONTROLS_BACK = Button(image=None, pos=(100, 550), 
-                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="Black", hovering_color="blue")
+                            text_input=textos[idioma_actual]["back"], font=get_font(50), base_color="black", hovering_color="blue")
         
         CONTROLS_BACK.changeColor(CONTROLS_MOUSE_POS)
         CONTROLS_BACK.update(SCREEN)
@@ -770,8 +982,12 @@ def settings():
                 if ES_BUTTON.checkForInput(SETTINGS_MOUSE_POS):
                     idioma_actual = "es"  # Cambiar a español
                     actualizar_niveles_config()  # Actualizar la configuración de niveles
+                    BGC = pygame.image.load("img/instruesp1.jpeg")
+                    
+                    
                 if EN_BUTTON.checkForInput(SETTINGS_MOUSE_POS):
                     idioma_actual = "en"  # Cambiar a inglés
+                    BGC = pygame.image.load("img/instruingle1.jpeg")
                     actualizar_niveles_config()  # Actualizar la configuración de niveles
                 if SETTINGS_BACK.checkForInput(SETTINGS_MOUSE_POS):
                     if p == 1:
@@ -829,14 +1045,14 @@ def main_menu():
         MENU_MOUSE_POS = pygame.mouse.get_pos()
         p = 1
 
-        MENU_TEXT1 = get_font(60).render("THE", True, "#F2637E")
+       #MENU_TEXT1 = get_font(60).render("THE", True, "#F2637E")
         MENU_TEXT2 = get_font(95).render("GUARDIANS", True, "white")
-        MENU_TEXT3 = get_font(70).render("of", True, "#5D3FD3")
+        #MENU_TEXT3 = get_font(70).render("of", True, "#5D3FD3")
         MENU_TEXT4 = get_font(70).render("THE OCEAN", True, "#0A6AA6")
-        MENU_RECT1 = MENU_TEXT1.get_rect(center=(150, 115))
-        MENU_RECT2 = MENU_TEXT2.get_rect(center=(450, 115))
-        MENU_RECT3 = MENU_TEXT3.get_rect(center=(200, 195))
-        MENU_RECT4 = MENU_TEXT3.get_rect(center=(290, 195))
+       # MENU_RECT1 = MENU_TEXT1.get_rect(center=(150, 115))
+        MENU_RECT2 = MENU_TEXT2.get_rect(center=(400, 115))
+        #MENU_RECT3 = MENU_TEXT3.get_rect(center=(200, 195))
+        MENU_RECT4 = MENU_TEXT4.get_rect(center=(390, 195))
 
         SCREEN.blit(buttoni_image, buttoni_pos)
         SCREEN.blit(buttonp_image, buttonp_pos)
@@ -857,8 +1073,8 @@ def main_menu():
         QUIT_BUTTON = Button(image=get_btn(button_size3), pos=(400, 520), 
                             text_input=textos[idioma_actual]["quit"], font=get_font(50), base_color="white", hovering_color="#F2637E")
         
-        SCREEN.blit(MENU_TEXT3, MENU_RECT3)
-        SCREEN.blit(MENU_TEXT1, MENU_RECT1)
+        #SCREEN.blit(MENU_TEXT3, MENU_RECT3)
+        #SCREEN.blit(MENU_TEXT1, MENU_RECT1)
         SCREEN.blit(MENU_TEXT2, MENU_RECT2)
         SCREEN.blit(MENU_TEXT4, MENU_RECT4)
 
