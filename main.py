@@ -182,8 +182,18 @@ def niveles(advanced, niv, ya):
         niv = 3
     if niv >= 4:
         if advanced == 0:
-           levels_begginer()
+            SCREEN.fill("white")  # Asegúrate de que el video no continúe en bucle
+            if idioma_actual == "es":
+                reproducir_video()
+            if idioma_actual == "en":
+                reproducir_video_ingles()
+            levels_begginer()
         if advanced == 1:
+            SCREEN.fill("white")  # Asegúrate de que el video no continúe en bucle
+            if idioma_actual == "es":
+                reproducir_video()
+            if idioma_actual == "en":
+                reproducir_video_ingles()
             levels_advanced()
     resultado, ya = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv, ya)
     if resultado == "reiniciar":
@@ -398,13 +408,13 @@ nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 # Escalar la imagen al nuevo tamaño
 BG_escalado = pygame.transform.scale(BG, nuevo_tamaño)
 
-BGC = pygame.image.load("img/instruesp1.jpeg")
+BGC = pygame.image.load("img/INSTRUCCIONES1.png")
 
 nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 # Escalar la imagen al nuevo tamaño
 BGC_escalado = pygame.transform.scale(BGC, nuevo_tamaño)
 
-BGINSIN = pygame.image.load("img/instruingle1.jpeg")
+BGINSIN = pygame.image.load("img/INSTRUCCIONES.png")
 nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 # Escalar la imagen al nuevo tamaño
 BGC_escalado2 = pygame.transform.scale(BGINSIN, nuevo_tamaño)

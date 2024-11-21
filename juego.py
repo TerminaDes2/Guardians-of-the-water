@@ -172,12 +172,12 @@ def get_font(size): # Returns Press-Start-2P in the desired size
         return pygame.font.Font("img/Bakery.ttf", size)
 
 
-BGC = pygame.image.load("img/instruesp1.jpeg")
+BGC = pygame.image.load("img/INSTRUCCIONES1.png")
 nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 # Escalar la imagen al nuevo tamaño
 BGC_escalado = pygame.transform.scale(BGC, nuevo_tamaño)
 
-BGINSIN = pygame.image.load("img/instruingle1.jpeg")
+BGINSIN = pygame.image.load("img/INSTRUCCIONES.png")
 nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 # Escalar la imagen al nuevo tamaño
 BGC_escalado2 = pygame.transform.scale(BGINSIN, nuevo_tamaño)
@@ -372,7 +372,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
     textos = {
         "en": {
             "keep": "Keep trying!",
-            "win": "You Win!",
+            "win": "You Won!",
             "time": "Time",
             "squares": "Fishes",
             "circles": "Trash",

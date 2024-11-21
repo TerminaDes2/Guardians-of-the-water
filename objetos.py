@@ -6,10 +6,10 @@ sp4 = 3
 
 def objetos(v1, v2, v3, v4):
     global sp1, sp2, sp3, sp4
-    sp1 = v1
-    sp2 = v2
-    sp3 = v3
-    sp4 = v4
+    sp1 = v1 + 100
+    sp2 = v2 + 100
+    sp3 = v3 + 100
+    sp4 = v4 + 100
 
 print("Se imprimen variables velocidad", sp1, sp2, sp3)
 print(str(sys.argv))
