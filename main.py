@@ -6,6 +6,7 @@ from juego import juego
 from objetos import objetos
 from juego import mostrar_botones, siguiente_nivel
 from botones_pausa import mostrar_pausa
+from historia import historia
 #from creditos import reproducir_video
 #from creditos_ingles import reproducir_video_ingles
 import cv2
@@ -236,6 +237,7 @@ textos = {
         "instrucciones": "img/instruingle1",
     }
 }
+historia()
 
 SCREEN = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Guardians the Ocean")
