@@ -16,7 +16,7 @@ print(str(sys.argv))
 def generar_circulos(num_circles, circle_radius):
     circles = []
     for i in range(num_circles):
-        circle_x = random.uniform(circle_radius, constantes.ANCHURA_PANTALLA - circle_radius)
+        circle_x = random.uniform(circle_radius, constantes.ANCHURA_PANTALLA - circle_radius - 10)
         circle_y = random.uniform(260, constantes.ALTURA_PANTALLA - 40)
         circle_velocidad = asignar_velocidad(circle_y)
         circles.append([circle_x, circle_y, circle_velocidad])
@@ -28,7 +28,7 @@ def generar_cuadrados(num_squares, square_size):
         square_x = random.uniform(0, constantes.ANCHURA_PANTALLA - square_size)
         square_y = random.uniform(260, constantes.ALTURA_PANTALLA - 40)
         square_velocidad = asignar_velocidad(square_y)
-        square_flipped = 1  # 1 indica que no está volteado, -1 indica que está volteado
+        square_flipped = -1  # 1 indica que no está volteado, -1 indica que está volteado
         squares.append([square_x, square_y, square_velocidad, square_flipped])
     return squares
 
