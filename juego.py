@@ -51,6 +51,7 @@ textos = {
         "instrucciones": "img/instruingle1",
     }
 }
+
 # Definir las imágenes de los botones
 btnsalida = pygame.image.load("img/saliro.png")
 btnreiniciar = pygame.image.load("img/reiniciaro.png")
@@ -72,7 +73,9 @@ reiniciar_position = (400, 300)
 reiniciar1_position = (400, 300)
 siguiente_position = (700, 500)
 
+
 BGA = pygame.image.load("img/ganaro1.png")
+
 # Escalar la imagen al nuevo tamaño
 BGA_escalado = pygame.transform.smoothscale(BGA, (800, 600))
 
@@ -171,7 +174,6 @@ def mostrar_botones():
 def get_font(size): # Returns Press-Start-2P in the desired size
         return pygame.font.Font("img/Bakery.ttf", size)
 
-
 BGC = pygame.image.load("img/instruesp1.jpeg")
 nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 # Escalar la imagen al nuevo tamaño
@@ -253,9 +255,6 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
 
             # Dibuja un rectángulo para depuración
             #pygame.draw.rect(screen, (255, 0, 0), buttonA_rect, 2)
-             # Dibuja un rectángulo para depuración
-        
-
 
             # Manejar eventos
             for event in pygame.event.get():
@@ -290,11 +289,11 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
         CONTROLS_MOUSE_POS = pygame.mouse.get_pos()
         
         screen.fill("white")
+
         if idioma_actual == "es":
            screen.blit(BGC_escalado, (0, 0))
         if idioma_actual == "en":
             screen.blit(BGC_escalado2, (0, 0))
-
 
        # CONTROLS_TEXT = get_font(90).render(textos[idioma_actual]["controls"], True, "Black")
         #CONTROLS_RECT = CONTROLS_TEXT.get_rect(center=(400, 100))
@@ -445,7 +444,6 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
     def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
         if flip_horizontal:
             triangle_rect = pygame.Rect(barco_rect.left - triangle_size + 45, triangle_pos[1] + 20, triangle_size , triangle_size)
-            
             #print(triangle_rect)
         else:  
             triangle_rect = pygame.Rect(barco_rect.right - triangle_size - 25, triangle_pos[1] + 20, triangle_size , triangle_size)
@@ -516,9 +514,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
         # Calcula el tiempo restante ajustado
         segundos_transcurridos = (pygame.time.get_ticks() - start_ticks - paused_time) / 1000
         tiempo_restante = tiempo_limite - segundos_transcurridos
-
         hover3 = pygame.mixer.Sound("img/perdiste.mp3")     
-
         # Verificar si el tiempo se agotó
         if tiempo_restante <= 0 or cuadrados_agarrados >= pierdes :
             # Mostrar mensaje de "Perdiste"
@@ -539,8 +535,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
                 return "volver"  # Regresa al menú
             elif opcion == "reiniciar":
                 return "reiniciar"  # Reinicia el nivel
-            
-        
+
         hover = pygame.mixer.Sound("img/win.mp3")
        
         if circulos_agarrados == circulos_eliminables:
