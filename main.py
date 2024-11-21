@@ -142,7 +142,9 @@ def actualizar_niveles_config():
         "niv":3
     }
     }
-def niveles(advanced, niv):
+def niveles(advanced, niv, ya):
+    if ya != 1:
+        ya = 0
     if niv == 1:
         advanced
         sp1 = 0
@@ -182,12 +184,12 @@ def niveles(advanced, niv):
            levels_begginer()
         if advanced == 1:
             levels_advanced()
-    resultado = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
+    resultado, ya = juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv, ya)
     if resultado == "reiniciar":
-       niveles(advanced, niv)
+       niveles(advanced, niv, ya)
     if resultado == "sig":
        niv += 1
-       niveles(advanced, niv)
+       niveles(advanced, niv, ya)
     if resultado == "volver":
         if advanced == 0:
            levels_begginer()
@@ -276,13 +278,13 @@ def reproducir_video():
                     cap.release()
                     hover.play()
                     main_menu()
+                    return
 
 
         # Leer el siguiente frame del video
         ret, frame = cap.read()
         if not ret:
             cap.release()
-            main_menu()  # Volver al menú principal cuando termine el video
             return
         
 
@@ -341,6 +343,7 @@ def reproducir_video_ingles():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     cap.release()
+                    hover.play()
                     main_menu()
                     return
                     
@@ -660,6 +663,7 @@ def levels_begginer():
    global advanced
    global p
    advanced = 0
+   ya = 0
    while True:
         LEVELSB_MOUSE_POS = pygame.mouse.get_pos()
         p=3
@@ -708,21 +712,21 @@ def levels_begginer():
                 if LEVEL1_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                     niv = 1
 
-                    niveles(advanced, niv)
+                    niveles(advanced, niv, ya)
 
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])]) 
 
                 if LEVEL2_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                     niv = 2
                 
-                    niveles(advanced, niv)
+                    niveles(advanced, niv, ya)
 
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
 
                 if LEVEL3_BUTTON.checkForInput(LEVELSB_MOUSE_POS):
                     niv = 3
 
-                    niveles(advanced, niv)
+                    niveles(advanced, niv, ya)
 
                   #subprocess.Popen(["python", "objetos.py", str(vel["v1"]), str(vel["v1,1"]), str(vel["v2"]), str(vel["v2,1"]), str(vel["v3"]), str(vel["v3,1"]), str(vel["vel"])])
 
@@ -755,7 +759,7 @@ def levels_advanced():
     global advanced
     global p
     advanced = 1
-
+    ya = 0
     while True:
         LEVELSA_MOUSE_POS = pygame.mouse.get_pos()
         p=4  
@@ -807,17 +811,17 @@ def levels_advanced():
                 if LEVEL1_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                     niv = 1
 
-                    niveles(advanced, niv)              
+                    niveles(advanced, niv, ya)            
 
                 elif LEVEL2_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                     niv = 2
 
-                    niveles(advanced, niv)
+                    niveles(advanced, niv, ya)
 
                 elif LEVEL3_BUTTON.checkForInput(LEVELSA_MOUSE_POS):
                     niv = 3
 
-                    niveles(advanced, niv)
+                    niveles(advanced, niv, ya)
 
                 # Configuración y sonido
                 if CONTROL_BUTTON.checkForInput(LEVELSA_MOUSE_POS):

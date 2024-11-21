@@ -1,6 +1,6 @@
 import pygame
 import sys
-import constantes
+import constantes, time
 from barco import cargar_barco
 from objetos import generar_circulos, generar_cuadrados
 from objetos import objetos
@@ -72,7 +72,7 @@ reiniciar_position = (400, 300)
 reiniciar1_position = (400, 300)
 siguiente_position = (700, 500)
 
-BGA = pygame.image.load("img/ganaro.png")
+BGA = pygame.image.load("img/ganaro1.png")
 # Escalar la imagen al nuevo tamaño
 BGA_escalado = pygame.transform.smoothscale(BGA, (800, 600))
 
@@ -183,7 +183,7 @@ nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 BGC_escalado2 = pygame.transform.scale(BGINSIN, nuevo_tamaño)
 
 #sa
-def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv):
+def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv, ya):
     pygame.init()
     #cambiar_musica("img/musica2.wav")
     PLAY_MOUSE_POS = pygame.mouse.get_pos()
@@ -357,7 +357,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
             juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv)
         if niv > 3:
             #print("Felicidades, completaste el juego")
-            return "volver"
+            return "volver", ya
         
     # Recibe los valores del main.py
     print(circulos)
@@ -371,21 +371,21 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
 
     textos = {
         "en": {
-            "keep": "Keep trying",
-            "win": "You Win",
+            "keep": "Keep trying!",
+            "win": "You Win!",
             "time": "Time",
             "squares": "Fishes",
             "circles": "Trash",
-            "lost": "Try again",
+            "lost": "I know you can!",
             "pause": "Pause",
         },
         "es": {
-        "keep": "Sigue intentando",
-            "win": "Felicidades, ganaste",
+        "keep": "!Sigue intentando¡",
+            "win": "¡Felicidades, ganaste!",
             "time": "Tiempo",
             "squares": "Peces",
             "circles": "Basura",
-            "lost": "Sigue intentando",
+            "lost": "¡Yo se que tu puedes!",
             "pause": "Pausa",
         }
     }
@@ -445,12 +445,12 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
     def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
         if flip_horizontal:
             triangle_rect = pygame.Rect(barco_rect.left - triangle_size + 45, triangle_pos[1] + 20, triangle_size , triangle_size)
-            hover1.play()
+            
             #print(triangle_rect)
         else:  
             triangle_rect = pygame.Rect(barco_rect.right - triangle_size - 25, triangle_pos[1] + 20, triangle_size , triangle_size)
             #print(triangle_rect)
-            hover2.play()
+           
 
         obj_rect = pygame.Rect(obj_pos[0], obj_pos[1], obj_size, obj_size)
         #pygame.draw.rect(screen, (255, 255, 0), obj_rect, 2)
@@ -474,14 +474,42 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
 
     # Bucle principal
     clock = pygame.time.Clock()
-    paused = False
+    if ya != 1:
+        paused = True
+    else:
+        paused = False
     running = True
     sound_was_playing_before_pause = True  # Nuevo estado para recordar si el sonido estaba activo antes de la pausa
+    running2 = True 
+    start_time = time.time()
+    if ya != 1:
+        ya = 0
    
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+            if ya != 1:
+                while running2:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            running2 = False
+
+                    # Mostrar la imagen en la pantalla
+                    screen.fill("white")
+                    if idioma_actual == "es":
+                        screen.blit(BGC_escalado, (0, 0))
+                    if idioma_actual == "en":
+                        screen.blit(BGC_escalado2, (0, 0))
+                    pygame.display.flip()
+
+                    # Verificar si han pasado 5 segundos
+                    if time.time() - start_time >= 5:
+                        paused = False
+                        running2 = False
+                        ya = 1
+                # Verificar si han pasado 5 segundos
 
             # Obtener las teclas presionadas
             keys = pygame.key.get_pressed()
@@ -498,9 +526,9 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
                         paused_time += pygame.time.get_ticks() - paused_ticks
                         
                 if button_rect3.collidepoint(mouse_pos) and paused:
-                    return "reiniciar"
+                    return "reiniciar", ya
                 if button_rect4.collidepoint(mouse_pos) and paused:
-                    return "volver"
+                    return "volver", ya
 
         # Dibuja el fondo y botón de pausa
         screen.blit(fondo_escalado, (0, 0))
@@ -516,12 +544,16 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
         # Calcula el tiempo restante ajustado
         segundos_transcurridos = (pygame.time.get_ticks() - start_ticks - paused_time) / 1000
         tiempo_restante = tiempo_limite - segundos_transcurridos
-                
+
+        hover3 = pygame.mixer.Sound("img/perdiste.mp3")     
+
         # Verificar si el tiempo se agotó
         if tiempo_restante <= 0 or cuadrados_agarrados >= pierdes :
             # Mostrar mensaje de "Perdiste"
             screen.fill("black")
             screen.blit(BGP_escalado, (0, 0))
+            #pygame.mixer.music.pause()  # Pause the music
+            hover3.play()
             font_size = 60
             
             texto_perdiste = get_font(font_size).render(textos[idioma_actual]["lost"], True, (255, 255, 255))
@@ -530,18 +562,19 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
             pygame.display.flip()  # Actualizar la pantalla para mostrar el mensaje de "Perdiste"
 
             opcion = mostrar_botones()  # Mostrar los botones de "Reiniciar" y "Salir"
-
+            #pygame.mixer.music.unpause()
             if opcion == "volver":
-                return "volver"  # Regresa al menú
+                return "volver", ya  # Regresa al menú
             elif opcion == "reiniciar":
-                return "reiniciar"  # Reinicia el nivel
+                return "reiniciar", ya  # Reinicia el nivel
+            
         
         hover = pygame.mixer.Sound("img/win.mp3")
-        
+       
         if circulos_agarrados == circulos_eliminables:
             pygame.mixer.music.pause()  # Pause the music
             hover.play()
-            font = pygame.font.Font(None, 74)
+            font = pygame.font.Font(None, 80)
             screen.fill("black")
             screen.blit(BGA_escalado, (0, 0))
             font_size=60
@@ -552,7 +585,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
             niv += 1
             if prueb == "nivel":
                 pygame.mixer.music.unpause()
-                return "sig"
+                return "sig", ya
             
             #return "volver"
             # Resume the music
@@ -622,6 +655,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
                     #pygame.draw.rect(screen, (0, 0, 255), circle_rect, 2)  # Azul para círculos
                     if check_collision(triangle_pos, triangle_size, (circle[0]+15, circle[1]+15), 10 * 2):
                         collision_detected = True
+                        hover2.play()
                         colisiones_activas = False  # Desactivar colisiones
                         triangle_direction = -1  # Si hay colisión, el triángulo comienza a subir
                         circles.remove(circle) #Elimina el circulo golpeado
@@ -632,6 +666,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
                     #pygame.draw.rect(screen, (255, 0, 255), square_rect, 2)  # Magenta para cuadrados
                     if check_collision(triangle_pos, triangle_size, (square[0], square[1]), 15):
                         collision_detected = True
+                        hover1.play()
                         colisiones_activas = False  # Desactivar colisiones
                         if advanced == 1:
                             triangle_velocidad = 200
