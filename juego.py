@@ -10,6 +10,47 @@ from button import Button
 
 screen = pygame.display.set_mode((constantes.ANCHURA_PANTALLA, constantes.ALTURA_PANTALLA))
 
+idioma_actual = "es"
+textos = {
+    "en": {
+        "play": "Play",
+        "levels": "Levels",
+        "settings": "Settings",
+        "language": "Language",
+        "controls": "Controls",
+        "back": "< Back",
+        "level1": "Level 1",
+        "level2": "Level 2",
+        "level3": "Level 3",
+        "begginer": "Beginner",
+        "advanced": "Advanced",
+        "about": "About Us",
+        "sound": "Sound",
+        "nosound": "No Sound",
+        "pause": "Pause",
+        "quit": "Quit",
+        "instrucciones": "img/instruesp1",
+    },
+    "es": {
+        "play": "Jugar",
+        "levels": "Niveles",
+        "settings": "Configuración",
+        "language": "Idioma",
+        "controls": "Controles",
+        "back": "< Atrás",
+        "level1": "Nivel 1",
+        "level2": "Nivel 2",
+        "level3": "Nivel 3",
+        "begginer": "Principiante",
+        "advanced": "Avanzado",
+        "about": "Nosotros",
+        "sound": "Sonido",
+        "nosound": "Sin Sonido",
+        "pause": "Pausa",
+        "quit": "Salir",
+        "instrucciones": "img/instruingle1",
+    }
+}
 # Definir las imágenes de los botones
 btnsalida = pygame.image.load("img/saliro.png")
 btnreiniciar = pygame.image.load("img/reiniciaro.png")
@@ -130,10 +171,16 @@ def mostrar_botones():
 def get_font(size): # Returns Press-Start-2P in the desired size
         return pygame.font.Font("img/Bakery.ttf", size)
 
-BGC = pygame.image.load("img/controles.jpg")
+
+BGC = pygame.image.load("img/instruesp1.jpeg")
 nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
 # Escalar la imagen al nuevo tamaño
 BGC_escalado = pygame.transform.scale(BGC, nuevo_tamaño)
+
+BGINSIN = pygame.image.load("img/instruingle1.jpeg")
+nuevo_tamaño = (800, 600)  # Cambia estos valores al tamaño deseado
+# Escalar la imagen al nuevo tamaño
+BGC_escalado2 = pygame.transform.scale(BGINSIN, nuevo_tamaño)
 
 #sa
 def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, niv):
@@ -206,6 +253,9 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
 
             # Dibuja un rectángulo para depuración
             #pygame.draw.rect(screen, (255, 0, 0), buttonA_rect, 2)
+             # Dibuja un rectángulo para depuración
+        
+
 
             # Manejar eventos
             for event in pygame.event.get():
@@ -240,14 +290,18 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
         CONTROLS_MOUSE_POS = pygame.mouse.get_pos()
         
         screen.fill("white")
-        screen.blit(BGC_escalado, (0, 0))
+        if idioma_actual == "es":
+           screen.blit(BGC_escalado, (0, 0))
+        if idioma_actual == "en":
+            screen.blit(BGC_escalado2, (0, 0))
+
 
        # CONTROLS_TEXT = get_font(90).render(textos[idioma_actual]["controls"], True, "Black")
         #CONTROLS_RECT = CONTROLS_TEXT.get_rect(center=(400, 100))
         #SCREEN.blit(CONTROLS_TEXT, CONTROLS_RECT)
 
         CONTROLS_BACK = Button(image=None, pos=(100, 550), 
-                            text_input="<-", font=get_font(50), base_color="Black", hovering_color="blue")
+                            text_input="<-", font=get_font(100), base_color="blue", hovering_color="white")
         
         CONTROLS_BACK.changeColor(CONTROLS_MOUSE_POS)
         CONTROLS_BACK.update(screen)
@@ -384,14 +438,19 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
         # Dibuja una línea (soga) entre la posición de inicio (altura máxima) y la posición de fin (altura actual)
         pygame.draw.line(surface, (132, 89, 14), inicio, fin, 5)  # Color blanco y grosor 5
 
+    hover1 = pygame.mixer.Sound("img/error.mp3")
+    hover2 = pygame.mixer.Sound("img/bien.mp3")
+
     # Función para verificar colisiones
     def check_collision(triangle_pos, triangle_size, obj_pos, obj_size):
         if flip_horizontal:
             triangle_rect = pygame.Rect(barco_rect.left - triangle_size + 45, triangle_pos[1] + 20, triangle_size , triangle_size)
+            hover1.play()
             #print(triangle_rect)
         else:  
             triangle_rect = pygame.Rect(barco_rect.right - triangle_size - 25, triangle_pos[1] + 20, triangle_size , triangle_size)
             #print(triangle_rect)
+            hover2.play()
 
         obj_rect = pygame.Rect(obj_pos[0], obj_pos[1], obj_size, obj_size)
         #pygame.draw.rect(screen, (255, 255, 0), obj_rect, 2)
