@@ -372,7 +372,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
     textos = {
         "en": {
             "keep": "Keep trying!",
-            "win": "You Won!",
+            "win": "Well done, you won!",
             "time": "Time",
             "squares": "Fishes",
             "circles": "Trash",
