@@ -235,53 +235,49 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
     button_rect5 = pygame.Rect(500, 300, 90, 90) #reiniciar pausa
 
     def draw_button(screen, paused):
-        global sound_playing, current_screen  # Asegúrate de usar la variable global para alternar el estado del soni
+        global sound_playing, en_pausa
         mouse_pos = pygame.mouse.get_pos()  # Obtener posición del mouse
         if paused:
-
             # Dibujar imágenes de botones
             screen.blit(resume_image, button_rect2.topleft)
             screen.blit(btnreiniciar1, button_rect3.topleft)
             screen.blit(btnsalida1, button_rect4.topleft)
             screen.blit(control_image, button_rect5.topleft)
             
-                # Mostrar el botón de sonido según su estado
+            # Mostrar el botón de sonido según su estado
             if sound_playing:
                 screen.blit(sound_on_image, buttonA_position)
             else:
                 screen.blit(sound_off_image, buttonA_position)
 
-            # Dibuja un rectángulo para depuración
-            #pygame.draw.rect(screen, (255, 0, 0), buttonA_rect, 2)
-             # Dibuja un rectángulo para depuración
-        
-
-
-            # Manejar eventos
+            # Procesar eventos y añadir más logs para diagnóstico
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     print(f"Clic detectado en posición: {mouse_pos}")
-                    print(f"Rectángulo del botón: {buttonA_rect}")
+                    
+                    # Verificar cada botón con su rectángulo correcto
                     if buttonA_rect.collidepoint(mouse_pos):
                         print("Botón de sonido clicado")
                         toggle_sound()
-                    if button_rect5.collidepoint(mouse_pos):
+                    elif button_rect5.collidepoint(mouse_pos):
+                        print("Botón de controles clicado")
                         controls(screen)
-                                  
+                    elif button_rect3.collidepoint(mouse_pos):
+                        print("Botón de reiniciar clicado")
+                        return "reiniciar"
+                    elif button_rect4.collidepoint(mouse_pos):
+                        print("Botón de salir clicado")
+                        return "volver"
+                    elif button_rect2.collidepoint(mouse_pos):
+                        print("Botón de reanudar clicado")
+                        return "reanudar"
         else:
             screen.blit(pause_image, button_rect.topleft)  # Mostrar imagen de "pausa"
-
-        # Aplicar hover y dibujar el botón
-            #button_rect4.collidepoint(mouse_pos)  # Detecta hover
-            #btnsalida.hoverEffect(mouse_pos)  # Detecta hover
-
-            #if pygame.mouse.get_pressed():  # Verifica si el botón izquierdo del ratón ha sido presionado
-                #btnsalida.update(screen)  # Dibuja el botón con el efecto de hover
-                #print("Se hizo clic en 'Volver'")  # Depuración: Verifica si el clic se registró
-                #return "volver"  # Retorna "volver" cuando se hace clic en el botón
+            
+        return None  # Devolver None si no se ha seleccionado ningún botón
 
     def controls(screen):
      global p
@@ -453,7 +449,7 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
            
 
         obj_rect = pygame.Rect(obj_pos[0], obj_pos[1], obj_size, obj_size)
-        #pygame.draw.rect(screen, (255, 255, 0), obj_rect, 2)
+        #pygame.draw.rect(screen, (255, 0, 0), obj_rect, 2)
         #pygame.draw.rect(screen, (0, 255, 0), triangle_rect, 2)
         return triangle_rect.colliderect(obj_rect)
 
@@ -548,11 +544,10 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
         hover3 = pygame.mixer.Sound("img/perdiste.mp3")     
 
         # Verificar si el tiempo se agotó
-        if tiempo_restante <= 0 or cuadrados_agarrados >= pierdes :
+        if tiempo_restante <= 0 or cuadrados_agarrados >= pierdes:
             # Mostrar mensaje de "Perdiste"
             screen.fill("black")
             screen.blit(BGP_escalado, (0, 0))
-            #pygame.mixer.music.pause()  # Pause the music
             hover3.play()
             font_size = 60
             
@@ -561,12 +556,27 @@ def juego(circulos, cuadrados, tiempo_limite, pierdes, idioma_actual, advanced, 
 
             pygame.display.flip()  # Actualizar la pantalla para mostrar el mensaje de "Perdiste"
 
-            opcion = mostrar_botones()  # Mostrar los botones de "Reiniciar" y "Salir"
-            #pygame.mixer.music.unpause()
-            if opcion == "volver":
-                return "volver", ya  # Regresa al menú
-            elif opcion == "reiniciar":
-                return "reiniciar", ya  # Reinicia el nivel
+            while True:
+                # Mostrar los botones
+                screen.blit(btnreiniciar, reiniciar_position)
+                screen.blit(btnsalida, salida_position)
+                pygame.display.flip()
+                
+                # Procesar eventos en un bucle dedicado
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        return "volver", ya
+                    
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        mouse_pos = pygame.mouse.get_pos()
+                        reiniciar_rect = btnreiniciar.get_rect(topleft=reiniciar_position)
+                        salida_rect = btnsalida.get_rect(topleft=salida_position)
+                        
+                        if reiniciar_rect.collidepoint(mouse_pos):
+                            return "reiniciar", ya
+                        elif salida_rect.collidepoint(mouse_pos):
+                            return "volver", ya
             
         
         hover = pygame.mixer.Sound("img/win.mp3")
